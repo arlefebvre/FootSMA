@@ -59,7 +59,6 @@ public class VueTerrain extends JPanel {
         try {
             imgTerrain = ImageIO.read(new File("src/main/resources/images/terrain.jpg"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             System.out.println("Pb de chargement d'image");
         }
@@ -95,14 +94,13 @@ public class VueTerrain extends JPanel {
         return possessionEquipe2;
     }
 
-    public void setPossessionEquipe2(boolean possessionEquipe1) {
+    public void setPossessionEquipe2(boolean possessionEquipe2) {
         this.possessionEquipe2 = possessionEquipe2;
     }
 
     public void mettreEnPage() {
         //this.setLayout(new BorderLayout());
         //this.add(imgTerrain,BorderLayout.CENTER);
-
     }
 
     public void paintComponent(Graphics g) {
@@ -112,20 +110,19 @@ public class VueTerrain extends JPanel {
         if (joueurs != null) {
 
             //System.out.println("Nombre de vues de joueurs enregistrées : "+String.valueOf(joueurs.size()));
-            for (int i = 0; i < joueurs.size(); i++) {
-                pos = joueurs.get(i).getPos();
+            for (VueJoueur joueur : joueurs) {
+                pos = joueur.getPos();
                 if (pos != null) {
-                    g.setColor(joueurs.get(i).getCouleurMaillot());
+                    g.setColor(joueur.getCouleurMaillot());
                     g.fillOval(pos.getX(), pos.getY(), 20, 20);
                     g.setColor(Color.WHITE);
-                    if (joueurs.get(i).getNumero() < 10) {
-                        g.drawString(String.valueOf(joueurs.get(i).getNumero()), pos.getX() + 7, pos.getY() + 15);
+                    if (joueur.getNumero() < 10) {
+                        g.drawString(String.valueOf(joueur.getNumero()), pos.getX() + 7, pos.getY() + 15);
                     } else {
-                        g.drawString(String.valueOf(joueurs.get(i).getNumero()), pos.getX() + 3, pos.getY() + 15);
+                        g.drawString(String.valueOf(joueur.getNumero()), pos.getX() + 3, pos.getY() + 15);
                     }
                     g.drawOval(pos.getX(), pos.getY(), 20, 20);
                 }
-
 
                 g.fillOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
                 g.setColor(Color.BLACK);
@@ -135,12 +132,9 @@ public class VueTerrain extends JPanel {
                 g.drawOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
             }
         } else System.out.println("Problème : pas de vues de joueurs enregistrées");
-
-
     }
 
     public void setPossession(int numero) {
-        // TODO Auto-generated method stub
         if (numero == 1) {
             setPossessionEquipe1(true);
             setPossessionEquipe2(false);
@@ -154,7 +148,6 @@ public class VueTerrain extends JPanel {
     }
 
     public Position getPosJoueurAuBallon() {
-        // TODO Auto-generated method stub
         return posJoueurAuBallon;
     }
 

@@ -31,9 +31,7 @@ public class AgentArbitre extends Agent {
 
     //private MessageTemplate template = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),MessageTemplate.MatchOntology("temps"));
 
-
     public void sifflerCoupDEnvoi() {
-        // TODO Auto-generated method stub
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
         for (int i = 0; i < 8; i++) {
@@ -43,9 +41,7 @@ public class AgentArbitre extends Agent {
         send(msg);
     }
 
-    @Override
     protected void setup() {
-        // TODO Auto-generated method stub
         Object[] args = getArguments();
         temps = (JLabel) args[0];
         vueTerrain = (VueTerrain) args[1];
@@ -63,20 +59,19 @@ public class AgentArbitre extends Agent {
             equipe1 = cc.createNewAgent("equipe1", AgentEquipe.class.getName(), arg1);
             equipe2 = cc.createNewAgent("equipe2", AgentEquipe.class.getName(), arg2);
         } catch (StaleProxyException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         try {
-            equipe1.start();
-            equipe2.start();
+            if (equipe1 != null) {
+                equipe1.start();
+            }
+            if (equipe2 != null) {
+                equipe2.start();
+            }
         } catch (StaleProxyException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-
         sifflerCoupDEnvoi();
-
         addBehaviour(new TickerBehaviour(this, 5000) {
             protected void onTick() {
                 // perform operation Y
@@ -95,7 +90,6 @@ public class AgentArbitre extends Agent {
     }
 
     public void sifflerFinDuMatch() {
-        // TODO Auto-generated method stub
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
         msg.setOntology("temps");

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] argss) {
-        // TODO Auto-generated method stub
         // Get a hold on JADE runtime
         Runtime rt = Runtime.instance();
         // Create a default profile
@@ -110,7 +109,7 @@ public class Main {
         argsJoueur8[5] = 2;
 
         // On recupere toutes les vues créées pour les donner a la vueTerrain
-        ArrayList<VueJoueur> joueurs = new ArrayList<VueJoueur>();
+        ArrayList<VueJoueur> joueurs = new ArrayList<>();
         joueurs.add(vueJoueur1);
         joueurs.add(vueJoueur2);
         joueurs.add(vueJoueur3);
@@ -121,8 +120,8 @@ public class Main {
         joueurs.add(vueJoueur8);
         // args2[1]=joueurs;
         VueTerrain vueTerrain = new VueTerrain(joueurs);
-        for (int i = 0; i < joueurs.size(); i++) {
-            joueurs.get(i).setVueTerrain(vueTerrain);
+        for (VueJoueur joueur : joueurs) {
+            joueur.setVueTerrain(vueTerrain);
         }
         Object[] args2 = new Object[1];
         args2[0] = vueTerrain;
@@ -178,28 +177,41 @@ public class Main {
         // Fire up the agent
         try {
             // dummy.start();
-            joueur1.start();
-            joueur2.start();
-            joueur3.start();
-            joueur4.start();
-            joueur5.start();
-            joueur6.start();
-            joueur7.start();
-            joueur8.start();
-            terrain.start();
-            //arbitre.start();
+            if (joueur1 != null) {
+                joueur1.start();
+            }
+            if (joueur2 != null) {
+                joueur2.start();
+            }
+            if (joueur3 != null) {
+                joueur3.start();
+            }
+            if (joueur4 != null) {
+                joueur4.start();
+            }
+            if (joueur5 != null) {
+                joueur5.start();
+            }
+            if (joueur6 != null) {
+                joueur6.start();
+            }
+            if (joueur7 != null) {
+                joueur7.start();
+            }
+            if (joueur8 != null) {
+                joueur8.start();
+            }
+            if (terrain != null) {
+                terrain.start();
+            }
         } catch (StaleProxyException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         Fenetre fen = new Fenetre(vueTerrain, cc);
         VueTerrain temp = fen.getVueTerrain();
-        // temp.add((VueJoueur)args[0],BorderLayout.WEST);
         fen.setVueTerrain(temp);
         fen.getVueTerrain().repaint();
         fen.setSize(800, 600);
-        // fen.add(new VueTerrain());
     }
-
 }

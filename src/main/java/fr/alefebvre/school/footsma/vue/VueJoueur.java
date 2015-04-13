@@ -18,6 +18,7 @@ public class VueJoueur {//extends JPanel {
     private int arrets;
     private int tirs;
     private boolean possession;
+
     public VueJoueur() {
         initialiser();
     }
@@ -63,7 +64,6 @@ public class VueJoueur {//extends JPanel {
     }
 
     public void setNumero(int i) {
-        // TODO Auto-generated method stub
         numero = i;
     }
 
@@ -105,27 +105,14 @@ public class VueJoueur {//extends JPanel {
     }
 
     public void setTirs(int mytirs) {
-        // TODO Auto-generated method stub
         tirs = mytirs;
     }
 
     public boolean getPossession() {
-        // TODO Auto-generated method stub
         return possession;
     }
 
     public void setPossession(boolean b) {
-        // TODO Auto-generated method stub
         possession = b;
     }
-
-	/*@Override
-    protected void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
-		super.paintComponent(g);
-		g.setColor(couleurMaillot);
-		g.fillOval(3,3,this.getWidth()-6,this.getHeight()-6);
-	}*/
-
-
 }

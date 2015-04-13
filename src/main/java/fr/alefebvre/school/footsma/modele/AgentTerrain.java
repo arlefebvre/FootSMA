@@ -17,21 +17,17 @@ public class AgentTerrain extends Agent {
             MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF),
             MessageTemplate.MatchOntology("ballon"));
 
-    @Override
     protected void setup() {
-        // TODO Auto-generated method stub
         Object[] args = getArguments();
         try {
             vue = (VueTerrain) args[0];
             //vue.setJoueurs((ArrayList<VueJoueur>) args[1]);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         System.out.println("Agent" + getLocalName() + " est créé");
         // Make this agent terminate
         addBehaviour(new CyclicBehaviour(this) {
-            @Override
             public void action() {
                 ACLMessage msg = myAgent.receive(template);
                 if (msg != null) {
@@ -59,9 +55,6 @@ public class AgentTerrain extends Agent {
                 } else {
                     block();
                 }
-
-					
-					
 					
 					/*ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
 					//ACLMessage msg = myAgent.receive();
@@ -90,10 +83,7 @@ public class AgentTerrain extends Agent {
         //doDelete();
     }
 
-
-    @Override
     public void doDelete() {
-        // TODO Auto-generated method stub
         super.doDelete();
         vue.removeAll();
     }

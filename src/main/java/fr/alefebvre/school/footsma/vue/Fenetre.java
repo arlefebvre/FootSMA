@@ -7,8 +7,6 @@ import jade.wrapper.StaleProxyException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Fenetre extends JFrame {
     private VueTerrain vueTerrain = null;
@@ -34,7 +32,7 @@ public class Fenetre extends JFrame {
     }
 
     public void initialiser() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("FootSMA");
         setSize(800, 500);
         setLocationRelativeTo(null);
@@ -51,39 +49,28 @@ public class Fenetre extends JFrame {
         scorePanel.add(temps);
         controlePanel = new JPanel();
         controlePanel.setLayout(new GridLayout(5, 5));
-        boutonDemarrer.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                Object[] args = new Object[2];
-                args[0] = temps;
-                args[1] = vueTerrain;
-                AgentController arbitre = null;
-                try {
-                    arbitre = cc.createNewAgent("Arbitre", AgentArbitre.class.getName(), args);
-                } catch (StaleProxyException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-                try {
-                    arbitre.start();
-                } catch (StaleProxyException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-                boutonDemarrer.setEnabled(false);
+        boutonDemarrer.addActionListener(e ->
+        {
+            Object[] args = new Object[2];
+            args[0] = temps;
+            args[1] = vueTerrain;
+            AgentController arbitre = null;
+            try {
+                arbitre = cc.createNewAgent("Arbitre", AgentArbitre.class.getName(), args);
+            } catch (StaleProxyException e1) {
+                e1.printStackTrace();
             }
+            try {
+                if (arbitre != null) {
+                    arbitre.start();
+                }
+            } catch (StaleProxyException e1) {
+                e1.printStackTrace();
+            }
+            boutonDemarrer.setEnabled(false);
         });
         controlePanel.add(boutonDemarrer);
-        boutonQuitter.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                // TODO Auto-generated method stub
-                System.exit(0);
-            }
-        });
+        boutonQuitter.addActionListener(arg0 -> System.exit(0));
         controlePanel.add(boutonQuitter);
     }
 
@@ -91,7 +78,7 @@ public class Fenetre extends JFrame {
         setLayout(new BorderLayout());
         add(vueTerrain, BorderLayout.CENTER);
         /*Icon icon = new ImageIcon("images/terrain.jpg");
-		add(new JLabel(icon),BorderLayout.SOUTH);*/
+        add(new JLabel(icon),BorderLayout.SOUTH);*/
         add(scorePanel, BorderLayout.SOUTH);
         add(controlePanel, BorderLayout.EAST);
         pack();

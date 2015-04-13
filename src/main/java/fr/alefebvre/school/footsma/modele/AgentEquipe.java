@@ -10,17 +10,13 @@ public class AgentEquipe extends Agent {
     private int numero;
     private VueTerrain vueTerrain;
 
-
-    @Override
     protected void setup() {
-        // TODO Auto-generated method stub
         Object[] args = getArguments();
         try {
             numero = (Integer) args[0];
             vueTerrain = (VueTerrain) args[1];
             //vue.setJoueurs((ArrayList<VueJoueur>) args[1]);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         if (numero == 1) {
@@ -35,14 +31,11 @@ public class AgentEquipe extends Agent {
         System.out.println("Agent" + getLocalName() + " est créé");
     }
 
-    @Override
     protected void takeDown() {
-        // TODO Auto-generated method stub
         System.out.println("Agent " + getLocalName() + ": terminating");
     }
 
     public void signalerPossession() {
-        // TODO Auto-generated method stub
         vueTerrain.setPossession(numero);
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
@@ -54,7 +47,6 @@ public class AgentEquipe extends Agent {
     }
 
     public void signalerPerte() {
-        // TODO Auto-generated method stub
         if (numero == 1) vueTerrain.setPossessionEquipe1(false);
         else vueTerrain.setPossessionEquipe2(false);
         ACLMessage msg;
@@ -65,5 +57,4 @@ public class AgentEquipe extends Agent {
         msg.setContent("PERTE");
         send(msg);
     }
-
 }
