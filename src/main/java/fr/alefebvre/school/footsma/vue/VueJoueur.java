@@ -3,132 +3,129 @@ package fr.alefebvre.school.footsma.vue;
 import fr.alefebvre.school.footsma.modele.Position;
 import jade.core.AID;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class VueJoueur {//extends JPanel {
-	private AID agentJoueur;
-	public AID getAgentJoueur() {
-		return agentJoueur;
-	}
+    private static final int TAILLEJOUEUR = 20;
+    private AID agentJoueur;
+    private VueTerrain vueTerrain;
+    private Color couleurMaillot;
+    private Position pos;
+    private int numero;
+    private int numeroEquipe;
+    private int tacles;
+    private int dribles;
+    private int arrets;
+    private int tirs;
+    private boolean possession;
+    public VueJoueur() {
+        initialiser();
+    }
 
-	public void setAgentJoueur(AID agentJoueur) {
-		this.agentJoueur = agentJoueur;
-	}
+    public AID getAgentJoueur() {
+        return agentJoueur;
+    }
 
-	private VueTerrain vueTerrain;
-	public VueTerrain getVueTerrain() {
-		return vueTerrain;
-	}
+    public void setAgentJoueur(AID agentJoueur) {
+        this.agentJoueur = agentJoueur;
+    }
 
-	public void setVueTerrain(VueTerrain vueTerrain) {
-		this.vueTerrain = vueTerrain;
-	}
+    public VueTerrain getVueTerrain() {
+        return vueTerrain;
+    }
 
-	private static final int TAILLEJOUEUR=20;
-	private Color couleurMaillot;
-	private Position pos;
-	private int numero;
-	private int numeroEquipe;
-	
-	private int tacles;
-	private int dribles;
-	private int arrets;
-	private int tirs;
-	private boolean possession;
-	public VueJoueur(){
-		initialiser();
-	}
-	
-	public Position getPos() {
-		return pos;
-	}
+    public void setVueTerrain(VueTerrain vueTerrain) {
+        this.vueTerrain = vueTerrain;
+    }
 
-	public void setPos(Position pos) {
-		this.pos = pos;
-	}
-	
-	public void setCouleurMaillot(Color couleurMaillot) {
-		this.couleurMaillot = couleurMaillot;
-	}
+    public Position getPos() {
+        return pos;
+    }
 
-	public void initialiser(){
-		pos=new Position(0,0);
-	}
+    public void setPos(Position pos) {
+        this.pos = pos;
+    }
 
-	public void setNumero(int i) {
-		// TODO Auto-generated method stub
-		numero=i;
-	}
+    public void initialiser() {
+        pos = new Position(0, 0);
+    }
 
-	public Color getCouleurMaillot() {
-		return couleurMaillot;
-	}
+    public Color getCouleurMaillot() {
+        return couleurMaillot;
+    }
 
-	public int getNumero() {
-		return numero;
-	}
+    public void setCouleurMaillot(Color couleurMaillot) {
+        this.couleurMaillot = couleurMaillot;
+    }
 
-	public void setNumeroEquipe(int myNumeroEquipe) {
-		// TODO Auto-generated method stub
-		numeroEquipe=myNumeroEquipe;
-	}
+    public int getNumero() {
+        return numero;
+    }
 
-	public int getTacles() {
-		return tacles;
-	}
+    public void setNumero(int i) {
+        // TODO Auto-generated method stub
+        numero = i;
+    }
 
-	public void setTacles(int tacles) {
-		this.tacles = tacles;
-	}
+    public int getTacles() {
+        return tacles;
+    }
 
-	public int getDribles() {
-		return dribles;
-	}
+    public void setTacles(int tacles) {
+        this.tacles = tacles;
+    }
 
-	public void setDribles(int dribles) {
-		this.dribles = dribles;
-	}
+    public int getDribles() {
+        return dribles;
+    }
 
-	public int getArrets() {
-		return arrets;
-	}
+    public void setDribles(int dribles) {
+        this.dribles = dribles;
+    }
 
-	public void setArrets(int arrets) {
-		this.arrets = arrets;
-	}
+    public int getArrets() {
+        return arrets;
+    }
 
-	public int getNumeroEquipe() {
-		return numeroEquipe;
-	}
+    public void setArrets(int arrets) {
+        this.arrets = arrets;
+    }
 
-	public void setTirs(int mytirs) {
-		// TODO Auto-generated method stub
-		tirs = mytirs;
-	}
+    public int getNumeroEquipe() {
+        return numeroEquipe;
+    }
 
-	public int getTirs() {
-		return tirs;
-	}
+    public void setNumeroEquipe(int myNumeroEquipe) {
+        // TODO Auto-generated method stub
+        numeroEquipe = myNumeroEquipe;
+    }
 
-	public void setPossession(boolean b) {
-		// TODO Auto-generated method stub
-		possession =b;
-	}
+    public int getTirs() {
+        return tirs;
+    }
 
-	public boolean getPossession() {
-		// TODO Auto-generated method stub
-		return possession;
-	}
+    public void setTirs(int mytirs) {
+        // TODO Auto-generated method stub
+        tirs = mytirs;
+    }
+
+    public boolean getPossession() {
+        // TODO Auto-generated method stub
+        return possession;
+    }
+
+    public void setPossession(boolean b) {
+        // TODO Auto-generated method stub
+        possession = b;
+    }
 
 	/*@Override
-	protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
 		super.paintComponent(g);
 		g.setColor(couleurMaillot);
 		g.fillOval(3,3,this.getWidth()-6,this.getHeight()-6);
 	}*/
-	
-	
-	
-	
+
+
 }
