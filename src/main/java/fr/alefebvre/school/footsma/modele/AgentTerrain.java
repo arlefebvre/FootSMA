@@ -1,15 +1,23 @@
 package fr.alefebvre.school.footsma.modele;
 
-import fr.alefebvre.school.footsma.vue.VueTerrain;
+import fr.alefebvre.school.footsma.controleur.AgentHandler;
+import fr.alefebvre.school.footsma.controleur.GameObject;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-public class AgentTerrain extends Agent {
-    private VueTerrain vue;
-    private Position ballonPos;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+public class AgentTerrain extends GameObject {
+    //private VueTerrain vue;
+    private AgentHandler handler;
+    private Position ballonPos = new Position(ReglesDuJeu.getPosMillieuTerrain());
+
     private boolean ballonDisponible = true;
     private AID joueurAuBallon;
 
@@ -17,14 +25,18 @@ public class AgentTerrain extends Agent {
             MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF),
             MessageTemplate.MatchOntology("ballon"));
 
+
     protected void setup() {
-        Object[] args = getArguments();
+        /*Object[] args = getArguments();
         try {
             vue = (VueTerrain) args[0];
             //vue.setJoueurs((ArrayList<VueJoueur>) args[1]);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
+        Object[] args = getArguments();
+        handler = (AgentHandler) args[0];
+        handler.getObjects().add(this);
         System.out.println("Agent" + getLocalName() + " est créé");
         // Make this agent terminate
         addBehaviour(new CyclicBehaviour(this) {
@@ -44,7 +56,7 @@ public class AgentTerrain extends Agent {
                             joueurAuBallon = msg.getSender();
                         } else {
                             reply.setPerformative(ACLMessage.INFORM);
-                            reply.setContent(vue.getJoueurAuBallon().getLocalName());
+                            reply.setContent(joueurAuBallon.getLocalName());
                         }
                     } else {
                         reply.setPerformative(ACLMessage.NOT_UNDERSTOOD);
@@ -55,7 +67,7 @@ public class AgentTerrain extends Agent {
                 } else {
                     block();
                 }
-					
+
 					/*ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
 					//ACLMessage msg = myAgent.receive();
 					if (msg != null) {
@@ -85,11 +97,29 @@ public class AgentTerrain extends Agent {
 
     public void doDelete() {
         super.doDelete();
-        vue.removeAll();
+        //vue.removeAll();
     }
 
     protected void takeDown() {
         System.out.println("Agent " + getLocalName() + ": terminating");
     }
 
+
+    @Override
+    public void render(Graphics g) {
+        try {
+            BufferedImage imgTerrain = ImageIO.read(new File("src/main/resources/images/terrain.jpg"));
+            g.drawImage(imgTerrain, 0, 0, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Pb de chargement d'image");
+        }
+        g.setColor(Color.WHITE);
+        g.fillOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
+        g.setColor(Color.BLACK);
+        g.drawOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
+        g.fillOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
+        g.setColor(Color.WHITE);
+        g.drawOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
+    }
 }

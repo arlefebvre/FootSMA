@@ -1,9 +1,9 @@
 package fr.alefebvre.school.footsma.modele;
 
+import fr.alefebvre.school.footsma.controleur.GameObject;
 import fr.alefebvre.school.footsma.vue.VueJoueur;
 import fr.alefebvre.school.footsma.vue.VueTerrain;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
@@ -15,7 +15,7 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 
-public class AgentJoueur extends Agent {
+public class AgentJoueur extends GameObject {
     public VueJoueur vue = new VueJoueur();
     public int count = 0;
     protected Position pos;
@@ -58,7 +58,7 @@ public class AgentJoueur extends Agent {
         System.out.println("Agent" + getLocalName() + " est créé");
 
 		/*addBehaviour(new OneShotBehaviour(this){
-			public void action(){
+            public void action(){
 			    //pos.setX(pos.getX()+20);
 			  // pos.setY(pos.getY()+50);
 			   // vue.setPos(pos);
@@ -129,6 +129,7 @@ public class AgentJoueur extends Agent {
                                         }
                                     } else System.out.println("Cible du tacle non trouvée");
                                 }
+
                                 public boolean done() {
                                     return true;
                                 }
@@ -220,4 +221,8 @@ public class AgentJoueur extends Agent {
         System.out.println("Agent " + getLocalName() + ": terminating");
     }
 
+    @Override
+    public void render(Graphics g) {
+
+    }
 }

@@ -17,16 +17,45 @@ import jade.wrapper.StaleProxyException;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Main {
+public class OldMain {
 
     public static void main(String[] argss) {
         // Get a hold on JADE runtime
         Runtime rt = Runtime.instance();
+        /*
+            http://jade.tilab.com/pipermail/jade-develop/2008q3/012874.html
+        */
+        rt.setCloseVM(true);
+        System.out.print("runtime created\n");
         // Create a default profile
-        Profile p = new ProfileImpl();
+        Profile profile = new ProfileImpl();
+        System.out.print("profile created\n");
+
+        System.out.println("Launching a whole in-process platform..." + profile);
+        jade.wrapper.AgentContainer mainContainer = rt.createMainContainer(profile);
+
+        // now set the default Profile to start a container
+        ProfileImpl pContainer = new ProfileImpl(null, 1200, null);
+        System.out.println("Launching the agent container ..." + pContainer);
+
+        jade.wrapper.AgentContainer cont = rt.createAgentContainer(pContainer);
+        System.out.println("Launching the agent container after ..." + pContainer);
+
+        System.out.println("containers created");
+        System.out.println("Launching the rma agent on the main container ...");
+        AgentController rma;
+        try {
+            rma = mainContainer.createNewAgent("rma",
+                    "jade.tools.rma.rma", new Object[0]);
+            rma.start();
+        } catch (StaleProxyException e) {
+            e.printStackTrace();
+        }
+
+
         // Create a new non-main container, connecting to the default
         // main container (i.e. on this host, port 1099)
-        ContainerController cc = rt.createAgentContainer(p);
+        ContainerController cc = rt.createAgentContainer(profile);
         // Create a new agent, a DummyAgent
         // and pass it a reference to an Object
         Color bleu = Color.BLUE;
