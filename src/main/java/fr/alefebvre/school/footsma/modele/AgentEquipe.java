@@ -1,9 +1,7 @@
 package fr.alefebvre.school.footsma.modele;
 
-import fr.alefebvre.school.footsma.vue.VueTerrain;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.lang.acl.ACLMessage;
 
 public class AgentEquipe extends Agent {
     private AID[] joueurs;

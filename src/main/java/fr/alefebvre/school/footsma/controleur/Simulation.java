@@ -2,7 +2,6 @@ package fr.alefebvre.school.footsma.controleur;
 
 import fr.alefebvre.school.footsma.modele.*;
 import fr.alefebvre.school.footsma.vue.SimulationWindow;
-import fr.alefebvre.school.footsma.vue.VueJoueur;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -107,7 +106,6 @@ public class Simulation extends Canvas implements Runnable {
 
     public static Object[] getArgsJoueur(AgentController terrain, AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
         Object[] argsJoueur = new Object[6];
-        VueJoueur vueJoueur5 = new VueJoueur();
         argsJoueur[0] = agentHandler;
         // couleur
         if(estGardien)
