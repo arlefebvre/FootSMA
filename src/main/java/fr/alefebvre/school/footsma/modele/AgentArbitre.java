@@ -2,34 +2,15 @@ package fr.alefebvre.school.footsma.modele;
 
 import fr.alefebvre.school.footsma.controleur.AgentHandler;
 import fr.alefebvre.school.footsma.controleur.GameObject;
-import fr.alefebvre.school.footsma.vue.VueTerrain;
-import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
-import jade.wrapper.StaleProxyException;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class AgentArbitre extends GameObject {
     private int scoreEquipe1;
     private int scoreEquipe2;
     private int tempsDeJeu = 0;
-   // private JLabel temps;
-    /*private AID[] joueurs = {new AID("joueur1", AID.ISLOCALNAME),
-            new AID("joueur2", AID.ISLOCALNAME),
-            new AID("joueur3", AID.ISLOCALNAME),
-            new AID("joueur4", AID.ISLOCALNAME),
-            new AID("joueur5", AID.ISLOCALNAME),
-            new AID("joueur6", AID.ISLOCALNAME),
-            new AID("joueur7", AID.ISLOCALNAME),
-            new AID("joueur8", AID.ISLOCALNAME)};*/
-
-    //private AID[] terrain;
-    //private VueTerrain vueTerrain;
     private Position pos;
     private AgentTerrain terrain;
     private AgentHandler handler;

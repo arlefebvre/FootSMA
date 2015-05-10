@@ -2,8 +2,6 @@ package fr.alefebvre.school.footsma.modele;
 
 import fr.alefebvre.school.footsma.controleur.AgentHandler;
 import fr.alefebvre.school.footsma.controleur.GameObject;
-import fr.alefebvre.school.footsma.vue.VueJoueur;
-import fr.alefebvre.school.footsma.vue.VueTerrain;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
