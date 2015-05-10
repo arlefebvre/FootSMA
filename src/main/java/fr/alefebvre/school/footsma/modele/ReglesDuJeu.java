@@ -7,6 +7,7 @@ public abstract class ReglesDuJeu {
     private static Position posButEquipe1 = new Position(10, posMillieuTerrain.getY());
     private static Position posButEquipe2 = new Position(posMillieuTerrain.getX() * 2 - 20, posMillieuTerrain.getY());
     private static double seuilDeProximite = 10;
+    public static final int NBJOUEURS = 4;
 
     public static Position getPosMillieuTerrain() {
         return posMillieuTerrain;

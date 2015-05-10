@@ -1,7 +1,11 @@
 package fr.alefebvre.school.footsma.controleur;
 
+import fr.alefebvre.school.footsma.modele.AgentJoueur;
 import fr.alefebvre.school.footsma.modele.AgentTerrain;
+import fr.alefebvre.school.footsma.modele.Position;
+import fr.alefebvre.school.footsma.modele.ReglesDuJeu;
 import fr.alefebvre.school.footsma.vue.SimulationWindow;
+import fr.alefebvre.school.footsma.vue.VueJoueur;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -71,10 +75,63 @@ public class Simulation extends Canvas implements Runnable {
         argsT[0] = agentHandler;
         AgentController terrain = cc.createNewAgent("terrain",
                 AgentTerrain.class.getName(), argsT);
+
+        // Gardiens
+        // Creation d'un joueur
+        Object[] argsJoueur1 = getArgsJoueur(terrain, agentHandler, true, 1, 1);
+        Object[] argsJoueur2 = getArgsJoueur(terrain, agentHandler, false, 1, 9);
+        Object[] argsJoueur3 = getArgsJoueur(terrain, agentHandler, true, 2, 1);
+        Object[] argsJoueur4 = getArgsJoueur(terrain, agentHandler, false, 2, 10);
+
+        AgentController joueur1 = cc.createNewAgent("joueur1", AgentJoueur.class.getName(),
+                argsJoueur1);
+        AgentController joueur2 = cc.createNewAgent("joueur2",
+                AgentJoueur.class.getName(), argsJoueur2);
+        AgentController joueur3 = cc.createNewAgent("joueur3", AgentJoueur.class.getName(),
+                argsJoueur3);
+        AgentController joueur4 = cc.createNewAgent("joueur4",
+                AgentJoueur.class.getName(), argsJoueur4);
+
         terrain.start();
+        joueur1.start();
+        joueur2.start();
+        joueur3.start();
+        joueur4.start();
 
         //agentHandler.addMap(new TilesMap(0, 0, Constants.TEST_MAP_PATH));
         // agentHandler.getObjects().add(new Player(0, 0, 0, 0, agentHandler));
+    }
+
+    public static Object[] getArgsJoueur(AgentController terrain, AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
+        Object[] argsJoueur = new Object[6];
+        VueJoueur vueJoueur5 = new VueJoueur();
+        argsJoueur[0] = agentHandler;
+        // couleur
+        if(estGardien)
+            argsJoueur[1] = Color.YELLOW;
+        else if (numEquipe ==1 )
+            argsJoueur[1] = Color.RED;
+        else
+            argsJoueur[1] = Color.BLUE;
+        if(estGardien){
+            if(numEquipe == 1)
+                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe1());
+            else
+                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe2());
+        }
+        else
+        {
+            if(numEquipe == 1)
+                argsJoueur[2] = new Position(ReglesDuJeu.getPosMillieuTerrain());
+            else
+                argsJoueur[2] = new Position(ReglesDuJeu.getPosMillieuTerrain());
+        }
+
+        argsJoueur[3] = numJoueur;
+        argsJoueur[4] = estGardien;
+        argsJoueur[5] = numEquipe;
+        //argsJoueur[6] = terrain;
+        return argsJoueur;
     }
 
     public synchronized void start() {

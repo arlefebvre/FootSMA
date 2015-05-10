@@ -12,11 +12,40 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AgentTerrain extends GameObject {
     //private VueTerrain vue;
     private AgentHandler handler;
     private Position ballonPos = new Position(ReglesDuJeu.getPosMillieuTerrain());
+    private boolean possessionEquipe1;
+    private boolean possessionEquipe2;
+    private ArrayList<AgentJoueur> joueurs;
+    private Position posJoueurAuBallon;
+
+    public Position getBallonPos() {
+        return ballonPos;
+    }
+
+    public void setBallonPos(Position ballonPos) {
+        this.ballonPos = ballonPos;
+    }
+
+    public boolean isBallonDisponible() {
+        return ballonDisponible;
+    }
+
+    public void setBallonDisponible(boolean ballonDisponible) {
+        this.ballonDisponible = ballonDisponible;
+    }
+
+    public AID getJoueurAuBallon() {
+        return joueurAuBallon;
+    }
+
+    public void setJoueurAuBallon(AID joueurAuBallon) {
+        this.joueurAuBallon = joueurAuBallon;
+    }
 
     private boolean ballonDisponible = true;
     private AID joueurAuBallon;
@@ -37,7 +66,9 @@ public class AgentTerrain extends GameObject {
         Object[] args = getArguments();
         handler = (AgentHandler) args[0];
         handler.getObjects().add(this);
-        System.out.println("Agent" + getLocalName() + " est créé");
+        handler.setTerrain(this);
+        joueurs = new ArrayList<AgentJoueur>();
+        System.out.println("Agent" + getLocalName() + " est crï¿½ï¿½");
         // Make this agent terminate
         addBehaviour(new CyclicBehaviour(this) {
             public void action() {
@@ -72,9 +103,9 @@ public class AgentTerrain extends GameObject {
 					//ACLMessage msg = myAgent.receive();
 					if (msg != null) {
 					// Process the message
-						//System.out.println(myAgent.getLocalName()+" a reçu un message ");
+						//System.out.println(myAgent.getLocalName()+" a reï¿½u un message ");
 						if(msg.getContent()=="BALLONDISPO"){
-							System.out.println(myAgent.getLocalName()+" a reçu un message de "+msg.getSender().getLocalName());
+							System.out.println(myAgent.getLocalName()+" a reï¿½u un message de "+msg.getSender().getLocalName());
 							ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
 							reply.addReceiver(msg.getSender());
 							
@@ -121,5 +152,46 @@ public class AgentTerrain extends GameObject {
         g.fillOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
         g.setColor(Color.WHITE);
         g.drawOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
+    }
+
+    public boolean isPossessionEquipe1() {
+        return possessionEquipe1;
+    }
+
+    public boolean isPossessionEquipe2() {
+        return possessionEquipe2;
+    }
+
+    public void setPossession(int numero) {
+        if (numero == 1) {
+            setPossessionEquipe1(true);
+            setPossessionEquipe2(false);
+        } else if (numero == 2) {
+            setPossessionEquipe2(true);
+            setPossessionEquipe1(false);
+        } else {
+            setPossessionEquipe1(false);
+            setPossessionEquipe2(false);
+        }
+    }
+
+    public void setPossessionEquipe1(boolean possessionEquipe1) {
+        this.possessionEquipe1 = possessionEquipe1;
+    }
+
+    public void setPossessionEquipe2(boolean possessionEquipe2) {
+        this.possessionEquipe2 = possessionEquipe2;
+    }
+
+    public ArrayList<AgentJoueur> getJoueurs() {
+        return joueurs;
+    }
+
+    public void addJoueur(AgentJoueur aj){
+        joueurs.add(aj);
+    }
+
+    public void setPosJoueurAuBallon(Position posJoueurAuBallon) {
+        this.posJoueurAuBallon = posJoueurAuBallon;
     }
 }
