@@ -134,7 +134,7 @@ public class VueTerrain extends JPanel {
         } else System.out.println("Problème : pas de vues de joueurs enregistrées");
     }
 
-    public void setPossession(int numero) {
+   /* public void setPossession(int numero) {
         if (numero == 1) {
             setPossessionEquipe1(true);
             setPossessionEquipe2(false);
@@ -145,7 +145,7 @@ public class VueTerrain extends JPanel {
             setPossessionEquipe1(false);
             setPossessionEquipe1(false);
         }
-    }
+    }*/
 
     public Position getPosJoueurAuBallon() {
         return posJoueurAuBallon;

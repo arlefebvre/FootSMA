@@ -1,9 +1,10 @@
 package fr.alefebvre.school.footsma.modele;
 
+import fr.alefebvre.school.footsma.controleur.AgentHandler;
+import fr.alefebvre.school.footsma.controleur.GameObject;
 import fr.alefebvre.school.footsma.vue.VueJoueur;
 import fr.alefebvre.school.footsma.vue.VueTerrain;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
@@ -15,8 +16,9 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 
-public class AgentJoueur extends Agent {
-    public VueJoueur vue = new VueJoueur();
+public class AgentJoueur extends GameObject {
+    //public VueJoueur vue = new VueJoueur();
+    private AgentHandler handler;
     public int count = 0;
     protected Position pos;
     private Color couleurMaillot;
@@ -27,22 +29,33 @@ public class AgentJoueur extends Agent {
     private boolean possessionEquipe = false;
     private boolean possessionJoueur = false;
     private int vitesse;
+    private int tacles;
+    private int dribles;
+    private int arrets;
+    private int tirs;
+    private AgentTerrain terrain;
+    private boolean possession;
 
     protected void setup() {
         Object[] args = getArguments();
         try {
-            vue = (VueJoueur) args[0];
-            vue.setAgentJoueur(getAID());
+            handler = (AgentHandler) args[0];
+            handler.getObjects().add(this);
+            //vue.setAgentJoueur(getAID());
             couleurMaillot = (Color) args[1];
-            vue.setCouleurMaillot(couleurMaillot);
+            //vue.setCouleurMaillot(couleurMaillot);
             pos = (Position) args[2];
-            vue.setPos(pos);
+            //vue.setPos(pos);
             numero = (Integer) args[3];
-            vue.setNumero(numero);
-            numeroEquipe = (Integer) args[5];
-            vue.setNumeroEquipe(numeroEquipe);
-            vue.setVueTerrain((VueTerrain) args[6]);
             gardien = (Boolean) args[4];
+            //vue.setNumero(numero);
+            numeroEquipe = (Integer) args[5];
+            //vue.setNumeroEquipe(numeroEquipe);
+            //vue.setVueTerrain((VueTerrain) args[6]);
+            //terrain = (AgentTerrain) args[6];
+            terrain = handler.getTerrain();
+            terrain.addJoueur(this);
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("probleme de recuperation des parametres pour : " + getLocalName());
@@ -50,15 +63,15 @@ public class AgentJoueur extends Agent {
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         vitesse = rand.nextInt(400) + 100;
-        vue.setTacles(rand.nextInt(100));
-        vue.setDribles(rand.nextInt(80) + 20);
-        vue.setArrets(rand.nextInt(100));
-        vue.setTirs(rand.nextInt(80) + 20);
-        vue.setPossession(possessionJoueur);
+        tacles = rand.nextInt(100);
+        dribles = (rand.nextInt(80) + 20);
+        arrets = (rand.nextInt(100));
+        tirs = (rand.nextInt(80) + 20);
+        //possession(possessionJoueur);
         System.out.println("Agent" + getLocalName() + " est créé");
 
 		/*addBehaviour(new OneShotBehaviour(this){
-			public void action(){
+            public void action(){
 			    //pos.setX(pos.getX()+20);
 			  // pos.setY(pos.getY()+50);
 			   // vue.setPos(pos);
@@ -82,14 +95,14 @@ public class AgentJoueur extends Agent {
                 //System.out.println("Tick");
                 //System.out.println(myAgent.getLocalName()+"cherche la prochaine action qu'il va effectuer");
                 if (numeroEquipe == 1) {
-                    possessionEquipe = vue.getVueTerrain().isPossessionEquipe1();
+                    possessionEquipe = terrain.isPossessionEquipe1();
 
-                } else possessionEquipe = vue.getVueTerrain().isPossessionEquipe2();
+                } else possessionEquipe = terrain.isPossessionEquipe2();
                 //if(count>0) count--;
                 //else
                 if (!possessionEquipe && !gardien) { //Si mon equipe n'a pas le ballon
                     //System.out.println(getLocalName()+ ": mon equipe n'a pas le ballon");
-                    if (ReglesDuJeu.getSeuilDeProximite() >= pos.distance(vue.getVueTerrain().getBallonPos())) {
+                    if (ReglesDuJeu.getSeuilDeProximite() >= pos.distance(terrain.getBallonPos())) {
                         //Si on est a proximité du ballon
                         System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
                         //On demande d'abord au terrain si le ballon est disponible
@@ -100,7 +113,7 @@ public class AgentJoueur extends Agent {
                         send(demandeBallon);
                         //System.out.println(myAgent.getLocalName()+" a effectué une demande pour savoir si le ballon etait disponible");
 
-                        if (!vue.getVueTerrain().isBallonDisponible()) {
+                        if (!terrain.isBallonDisponible()) {
                             //System.out.println("pas dispo pour "+getLocalName());
 
                             //Tenter un tacle
@@ -108,41 +121,42 @@ public class AgentJoueur extends Agent {
                                 public void action() {
                                     boolean trouve = false;
                                     int j = 0;
-                                    while (!trouve && j < vue.getVueTerrain().getJoueurs().size()) {
-                                        if (vue.getVueTerrain().getJoueurs().get(j).getAgentJoueur() == vue.getVueTerrain().getJoueurAuBallon()) {
+                                    while (!trouve && j < terrain.getJoueurs().size()) {
+                                        if (terrain.getJoueurs().get(j).getAID() == terrain.getJoueurAuBallon()) {
                                             trouve = true;
                                         } else {
                                             j++;
                                         }
                                     }
                                     if (trouve) {
-                                        if (vue.getTacles() > +vue.getVueTerrain().getJoueurs().get(j).getDribles()) {
-                                            vue.getVueTerrain().setPossession(numeroEquipe);
+                                        if (tacles > +terrain.getJoueurs().get(j).getDribles()) {
+                                            terrain.setPossession(numeroEquipe);
                                             possessionJoueur = true;
-                                            vue.getVueTerrain().setBallonPos(pos);
-                                            vue.getVueTerrain().getJoueurs().get(j).setPossession(false);
+                                            terrain.setBallonPos(pos);
+                                            terrain.getJoueurs().get(j).setPossessionJoueur(false);
                                             System.out.println(getLocalName() + " a reussi un tacle");
 
                                         } else {
                                             count += 1;
-                                            System.out.println(vue.getVueTerrain().getJoueurs().get(j).getAgentJoueur().getLocalName() + " a reussi un dribble");
+                                            System.out.println(terrain.getJoueurs().get(j).getLocalName() + " a reussi un dribble");
                                         }
                                     } else System.out.println("Cible du tacle non trouvée");
                                 }
+
                                 public boolean done() {
                                     return true;
                                 }
                             });
                         } else {//prendre le ballon
-                            vue.getVueTerrain().setBallonDisponible(false);
-                            vue.getVueTerrain().setJoueurAuBallon(myAgent.getAID());
-                            vue.getVueTerrain().setPosJoueurAuBallon(pos);
+                            terrain.setBallonDisponible(false);
+                            terrain.setJoueurAuBallon(myAgent.getAID());
+                            terrain.setPosJoueurAuBallon(pos);
                             possessionJoueur = true;
-                            vue.setPossession(true);
-                            vue.getVueTerrain().setBallonPos(new Position(pos));
+                            //vue.setPossession(true);
+                            terrain.setBallonPos(new Position(pos));
                             // possessionEquipe
                             possessionEquipe = true;
-                            vue.getVueTerrain().setPossession(numero);
+                           terrain.setPossession(numero);
                             if (numeroEquipe == 1) {
                                 pos.Approcher(ReglesDuJeu.getPosButEquipe2());
                             } else pos.Approcher(ReglesDuJeu.getPosButEquipe1());
@@ -151,10 +165,10 @@ public class AgentJoueur extends Agent {
                     }
 
                     // Je me rapproche du ballon
-                    pos.Approcher(vue.getVueTerrain().getBallonPos());
+                    pos.Approcher(terrain.getBallonPos());
                 } else if (!gardien) { // Si mon equipe a le ballon
                     System.out.println(getLocalName() + ": mon equipe a le ballon");
-                    if (!vue.getPossession()) {// Si ce n'est pas moi qui ait le ballon, mais un coequipier
+                    if (!possessionJoueur) {// Si ce n'est pas moi qui ait le ballon, mais un coequipier
                         if (numeroEquipe == 1) {
                             pos.Fuir(ReglesDuJeu.getPosButEquipe1());
                         } else pos.Fuir(ReglesDuJeu.getPosButEquipe2());
@@ -184,8 +198,8 @@ public class AgentJoueur extends Agent {
                 }
 
                 //pos.setX(pos.getX()+5);
-                vue.setPos(pos);
-                vue.getVueTerrain().repaint();
+                //vue.setPos(pos);
+                //vue.getVueTerrain().repaint();
                 //Si je suis a proximite du ballon
                 //myAgent.doDelete();
             }
@@ -212,12 +226,32 @@ public class AgentJoueur extends Agent {
 
     public void doDelete() {
         super.doDelete();
-        vue.setPos(null);
-        vue.getVueTerrain().repaint();
+        //vue.setPos(null);
+        //vue.getVueTerrain().repaint();
     }
 
     protected void takeDown() {
         System.out.println("Agent " + getLocalName() + ": terminating");
     }
 
+    @Override
+    public void render(Graphics g) {
+        g.setColor(couleurMaillot);
+        g.fillOval(pos.getX(), pos.getY(), 20, 20);
+        g.setColor(Color.WHITE);
+        if (numero < 10) {
+            g.drawString(String.valueOf(numero), pos.getX() + 7, pos.getY() + 15);
+        } else {
+            g.drawString(String.valueOf(numero), pos.getX() + 3, pos.getY() + 15);
+        }
+        g.drawOval(pos.getX(), pos.getY(), 20, 20);
+    }
+
+    public int getDribles() {
+        return dribles;
+    }
+
+    public void setPossessionJoueur(boolean possession) {
+        this.possessionJoueur = possession;
+    }
 }

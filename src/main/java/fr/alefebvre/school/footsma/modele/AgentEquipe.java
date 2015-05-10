@@ -8,13 +8,14 @@ import jade.lang.acl.ACLMessage;
 public class AgentEquipe extends Agent {
     private AID[] joueurs;
     private int numero;
-    private VueTerrain vueTerrain;
+    //private VueTerrain vueTerrain;
+    private AgentTerrain terrain;
 
     protected void setup() {
         Object[] args = getArguments();
         try {
             numero = (Integer) args[0];
-            vueTerrain = (VueTerrain) args[1];
+            terrain = (AgentTerrain) args[1];
             //vue.setJoueurs((ArrayList<VueJoueur>) args[1]);
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,7 +36,7 @@ public class AgentEquipe extends Agent {
         System.out.println("Agent " + getLocalName() + ": terminating");
     }
 
-    public void signalerPossession() {
+    /*public void signalerPossession() {
         vueTerrain.setPossession(numero);
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
@@ -45,8 +46,8 @@ public class AgentEquipe extends Agent {
         msg.setContent("POSSESSION");
         send(msg);
     }
-
-    public void signalerPerte() {
+*/
+    /*public void signalerPerte() {
         if (numero == 1) vueTerrain.setPossessionEquipe1(false);
         else vueTerrain.setPossessionEquipe2(false);
         ACLMessage msg;
@@ -56,5 +57,5 @@ public class AgentEquipe extends Agent {
         }
         msg.setContent("PERTE");
         send(msg);
-    }
+    }*/
 }

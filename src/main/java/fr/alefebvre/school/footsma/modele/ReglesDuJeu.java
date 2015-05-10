@@ -1,12 +1,13 @@
 package fr.alefebvre.school.footsma.modele;
 
-public class ReglesDuJeu {
+public abstract class ReglesDuJeu {
     private static final int largeurTerrain = 290;
     private static final int longueurTerrain = 440;
     private static Position posMillieuTerrain = new Position(225, 145);
     private static Position posButEquipe1 = new Position(10, posMillieuTerrain.getY());
     private static Position posButEquipe2 = new Position(posMillieuTerrain.getX() * 2 - 20, posMillieuTerrain.getY());
     private static double seuilDeProximite = 10;
+    public static final int NBJOUEURS = 4;
 
     public static Position getPosMillieuTerrain() {
         return posMillieuTerrain;
