@@ -1,9 +1,6 @@
 package fr.alefebvre.school.footsma.controleur;
 
-import fr.alefebvre.school.footsma.modele.AgentJoueur;
-import fr.alefebvre.school.footsma.modele.AgentTerrain;
-import fr.alefebvre.school.footsma.modele.Position;
-import fr.alefebvre.school.footsma.modele.ReglesDuJeu;
+import fr.alefebvre.school.footsma.modele.*;
 import fr.alefebvre.school.footsma.vue.SimulationWindow;
 import fr.alefebvre.school.footsma.vue.VueJoueur;
 import jade.core.Profile;
@@ -97,6 +94,12 @@ public class Simulation extends Canvas implements Runnable {
         joueur2.start();
         joueur3.start();
         joueur4.start();
+
+        Object[] argsArbitre = new Object[2];
+        argsArbitre[0] = 0;
+        argsArbitre[1] = agentHandler;
+        AgentController arbitre = cc.createNewAgent("Arbitre", AgentArbitre.class.getName(), argsArbitre);
+        arbitre.start();
 
         //agentHandler.addMap(new TilesMap(0, 0, Constants.TEST_MAP_PATH));
         // agentHandler.getObjects().add(new Player(0, 0, 0, 0, agentHandler));
@@ -200,5 +203,11 @@ public class Simulation extends Canvas implements Runnable {
         this.agentHandler.render(g);
         g.dispose();
         bs.show();
+    }
+
+    public void startMatch() {
+        if(agentHandler!=null){
+            agentHandler.startMatch();
+        }
     }
 }
