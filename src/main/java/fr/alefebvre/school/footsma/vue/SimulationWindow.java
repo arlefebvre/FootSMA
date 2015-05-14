@@ -20,7 +20,7 @@ public class SimulationWindow extends Canvas {
         JButton runButton = new JButton("Coup d'envoi");
         runButton.addActionListener(e -> simulation.startMatch());
         JButton quitButton = new JButton("Quitter");
-        quitButton.addActionListener(e -> System.exit(0));
+        quitButton.addActionListener(e -> simulation.endMatch());
         JPanel controlPanel;
         controlPanel = new JPanel();
         controlPanel.setLayout(new GridLayout(5, 5));

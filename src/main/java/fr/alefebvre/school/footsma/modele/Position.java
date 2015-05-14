@@ -19,11 +19,21 @@ public class Position {
         return x;
     }
 
-    public void setX(int xx) {
+    private static int limit(int n,int min,int max){
+        if(n<min)
+            return min;
+        else if(n>max)
+            return max;
+        else
+            return n;
+    }
 
-        if (xx >= 10 && xx < ReglesDuJeu.getLongueurTerrain() - 10) this.x = xx;
-        else if (xx < 10) this.x = 10;
-        else this.x = ReglesDuJeu.getLongueurTerrain() - 10;
+    public static Position milieu(Position p1,Position p2){
+        return new Position((p1.x+p2.x)/2,(p1.y+p2.y)/2);
+    }
+
+    public void setX(int xx) {
+        this.x = limit(xx,10,ReglesDuJeu.getLongueurTerrain()-10);
     }
 
     public int getY() {
@@ -31,16 +41,14 @@ public class Position {
     }
 
     public void setY(int yy) {
-        if (yy >= 10 && yy < ReglesDuJeu.getLargeurTerrain() - 10) this.y = yy;
-        else if (yy < 10) this.y = 10;
-        else this.y = ReglesDuJeu.getLargeurTerrain() - 10;
+        this.y = limit(yy,10,ReglesDuJeu.getLargeurTerrain()-10);
     }
 
     public double distance(Position a) {
         return Math.sqrt((a.getX() - getX()) * (a.getX() - getX()) + (a.getY() - getY()) * (a.getY() - getY()));
     }
 
-    public void Approcher(Position p) {
+    public void approcher(Position p) {
         if (getX() >= p.getX()) {
             if (!(getX() == p.getX())) setX(getX() - 2);
         } else {

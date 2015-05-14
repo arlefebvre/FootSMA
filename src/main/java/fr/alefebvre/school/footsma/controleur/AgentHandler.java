@@ -1,53 +1,96 @@
 package fr.alefebvre.school.footsma.controleur;
 
 import fr.alefebvre.school.footsma.modele.AgentArbitre;
+import fr.alefebvre.school.footsma.modele.AgentJoueur;
 import fr.alefebvre.school.footsma.modele.AgentTerrain;
+import jade.core.AID;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 public class AgentHandler {
 
     protected CopyOnWriteArrayList<GameObject> objects = new CopyOnWriteArrayList<>();
 
-    public AgentArbitre getArbitre() {
-        return arbitre;
-    }
+    private Set<AID> equipe1 = new HashSet<AID>();
 
-    private AgentArbitre arbitre;
+    private Set<AID> equipe2 = new HashSet<AID>();
 
-    public AgentTerrain getTerrain() {
-        return terrain;
-    }
+    private AID arbitreId;
 
+    private AID terrainId;
     private AgentTerrain terrain;
 
     public CopyOnWriteArrayList<GameObject> getObjects() {
         return objects;
     }
 
-/*    public void tick() {
-        objects.forEach(GameObject::tick);
-    }*/
-
+    /**
+     * Rendu de tous les agents
+     *
+     * @param g
+     */
     public void render(Graphics g) {
-        //List liste = Collections.synchronizedList(objects);
         objects.forEach(agent -> agent.render(g));
     }
 
-    public void setTerrain(AgentTerrain terrain) {
-        this.terrain = terrain;
-    }
-
+    /**
+     * Lancement du match
+     */
     public void startMatch() {
-        if(arbitre!= null){
-            arbitre.sifflerCoupDEnvoi();
+        if (arbitreId != null) {
+            for (GameObject go : objects) {
+                if (go.getAID() == arbitreId) {
+                    AgentArbitre arbitre = (AgentArbitre) go;
+                    arbitre.sifflerCoupDEnvoi();
+                }
+            }
         }
     }
 
-    public void setArbitre(AgentArbitre arbitre) {
-        this.arbitre = arbitre;
+    public AID getArbitreId() {
+        return arbitreId;
+    }
+
+    public void setArbitreId(AID arbitreId) {
+        this.arbitreId = arbitreId;
+    }
+
+    public AID getTerrainId() {
+        return terrainId;
+    }
+
+    @Deprecated
+    public void setTerrain(AgentTerrain at) {
+        terrain = at;
+    }
+
+    @Deprecated
+    public AgentTerrain getTerrain() {
+        return terrain;
+    }
+
+    public void setTerrainId(AID terrainId) {
+        this.terrainId = terrainId;
+    }
+
+    public Stream<AID> getJoueursIds() {
+        return Stream.concat(equipe1.stream(),equipe2.stream());
+    }
+
+    public void ajouteJoueur(AID joueurAID, int numeroEquipe) {
+        if(numeroEquipe == 1)
+            equipe1.add(joueurAID);
+        else
+            equipe2.add(joueurAID);
+    }
+
+    public AgentJoueur getJoueur(AID id){
+        Optional<GameObject> gameObject = objects.stream().filter(j -> j.getAID() == id).findFirst();
+            return (AgentJoueur) gameObject.orElse(null);
     }
 }

@@ -31,7 +31,7 @@ public class AgentJoueur extends GameObject {
     private int dribles;
     private int arrets;
     private int tirs;
-    private AgentTerrain terrain;
+    //private AgentTerrain terrain;
     private boolean possession;
 
     protected void setup() {
@@ -48,11 +48,12 @@ public class AgentJoueur extends GameObject {
             gardien = (Boolean) args[4];
             //vue.setNumero(numero);
             numeroEquipe = (Integer) args[5];
+            handler.ajouteJoueur(this.getAID(),numeroEquipe);
             //vue.setNumeroEquipe(numeroEquipe);
             //vue.setVueTerrain((VueTerrain) args[6]);
             //terrain = (AgentTerrain) args[6];
-            terrain = handler.getTerrain();
-            terrain.addJoueur(this);
+            /*terrain = handler.getTerrain();
+            terrain.addJoueur(this);*/
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,7 +67,7 @@ public class AgentJoueur extends GameObject {
         arrets = (rand.nextInt(100));
         tirs = (rand.nextInt(80) + 20);
         //possession(possessionJoueur);
-        System.out.println("Agent" + getLocalName() + " est créé");
+        System.out.println("Agent" + getLocalName() + " est crÃ©Ã©");
 
 		/*addBehaviour(new OneShotBehaviour(this){
             public void action(){
@@ -93,52 +94,53 @@ public class AgentJoueur extends GameObject {
                 //System.out.println("Tick");
                 //System.out.println(myAgent.getLocalName()+"cherche la prochaine action qu'il va effectuer");
                 if (numeroEquipe == 1) {
-                    possessionEquipe = terrain.isPossessionEquipe1();
+                    possessionEquipe = handler.getTerrain().isPossessionEquipe1();
 
-                } else possessionEquipe = terrain.isPossessionEquipe2();
+                } else possessionEquipe = handler.getTerrain().isPossessionEquipe2();
                 //if(count>0) count--;
                 //else
                 if (!possessionEquipe && !gardien) { //Si mon equipe n'a pas le ballon
                     //System.out.println(getLocalName()+ ": mon equipe n'a pas le ballon");
-                    if (ReglesDuJeu.getSeuilDeProximite() >= pos.distance(terrain.getBallonPos())) {
-                        //Si on est a proximité du ballon
-                        System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
-                        //On demande d'abord au terrain si le ballon est disponible
+                    if (ReglesDuJeu.getSeuilDeProximite() >= pos.distance(handler.getTerrain().getBallonPos())) {
+                        //Si on est a proximitÃ© du ballon
+                        System.out.println(myAgent.getLocalName() + " est a proximitÃ© du ballon");
+                        //On demande d'abord au handler.getTerrain() si le ballon est disponible
                         ACLMessage demandeBallon = new ACLMessage(ACLMessage.QUERY_IF);
                         demandeBallon.setOntology("ballon");
-                        demandeBallon.addReceiver(new AID("terrain", AID.ISLOCALNAME));
+                        demandeBallon.addReceiver(new AID("handler.getTerrain()", AID.ISLOCALNAME));
                         demandeBallon.setContent("BALLONDISPO");
                         send(demandeBallon);
-                        //System.out.println(myAgent.getLocalName()+" a effectué une demande pour savoir si le ballon etait disponible");
+                        //System.out.println(myAgent.getLocalName()+" a effectuÃ© une demande pour savoir si le ballon etait disponible");
 
-                        if (!terrain.isBallonDisponible()) {
+                        if (!handler.getTerrain().isBallonDisponible()) {
                             //System.out.println("pas dispo pour "+getLocalName());
 
                             //Tenter un tacle
                             addBehaviour(new Behaviour() {
                                 public void action() {
-                                    boolean trouve = false;
+                                    /*boolean trouve = false;
                                     int j = 0;
-                                    while (!trouve && j < terrain.getJoueurs().size()) {
-                                        if (terrain.getJoueurs().get(j).getAID() == terrain.getJoueurAuBallon()) {
+                                    while (!trouve && j < handler.getTerrain().getJoueurs().size()) {
+                                        if (handler.getTerrain().getJoueurs().get(j).getAID() == handler.getTerrain().getJoueurAuBallon()) {
                                             trouve = true;
                                         } else {
                                             j++;
                                         }
-                                    }
-                                    if (trouve) {
-                                        if (tacles > +terrain.getJoueurs().get(j).getDribles()) {
-                                            terrain.setPossession(numeroEquipe);
+                                    }*/
+                                    AgentJoueur joueurAuBallon = handler.getJoueur(handler.getTerrain().getJoueurAuBallon());
+                                    if (joueurAuBallon!=null) {
+                                        if (tacles > joueurAuBallon.getDribles()) {
+                                            handler.getTerrain().setPossession(numeroEquipe);
                                             possessionJoueur = true;
-                                            terrain.setBallonPos(pos);
-                                            terrain.getJoueurs().get(j).setPossessionJoueur(false);
+                                            handler.getTerrain().setBallonPos(pos);
+                                            joueurAuBallon.setPossessionJoueur(false);
                                             System.out.println(getLocalName() + " a reussi un tacle");
 
                                         } else {
                                             count += 1;
-                                            System.out.println(terrain.getJoueurs().get(j).getLocalName() + " a reussi un dribble");
+                                            System.out.println(joueurAuBallon.getLocalName() + " a reussi un dribble");
                                         }
-                                    } else System.out.println("Cible du tacle non trouvée");
+                                    } else System.out.println("Cible du tacle non trouvÃ©e");
                                 }
 
                                 public boolean done() {
@@ -146,24 +148,24 @@ public class AgentJoueur extends GameObject {
                                 }
                             });
                         } else {//prendre le ballon
-                            terrain.setBallonDisponible(false);
-                            terrain.setJoueurAuBallon(myAgent.getAID());
-                            terrain.setPosJoueurAuBallon(pos);
+                            handler.getTerrain().setBallonDisponible(false);
+                            handler.getTerrain().setJoueurAuBallon(myAgent.getAID());
+                            handler.getTerrain().setPosJoueurAuBallon(pos);
                             possessionJoueur = true;
                             //vue.setPossession(true);
-                            terrain.setBallonPos(new Position(pos));
+                            handler.getTerrain().setBallonPos(new Position(pos));
                             // possessionEquipe
                             possessionEquipe = true;
-                           terrain.setPossession(numero);
+                            handler.getTerrain().setPossession(numero);
                             if (numeroEquipe == 1) {
-                                pos.Approcher(ReglesDuJeu.getPosButEquipe2());
-                            } else pos.Approcher(ReglesDuJeu.getPosButEquipe1());
-                            System.out.println(myAgent.getLocalName() + " a récupéré le ballon");
+                                pos.approcher(ReglesDuJeu.getPosButEquipe2());
+                            } else pos.approcher(ReglesDuJeu.getPosButEquipe1());
+                            System.out.println(myAgent.getLocalName() + " a rï¿½cupï¿½rï¿½ le ballon");
                         }
                     }
 
                     // Je me rapproche du ballon
-                    pos.Approcher(terrain.getBallonPos());
+                    pos.approcher(handler.getTerrain().getBallonPos());
                 } else if (!gardien) { // Si mon equipe a le ballon
                     System.out.println(getLocalName() + ": mon equipe a le ballon");
                     if (!possessionJoueur) {// Si ce n'est pas moi qui ait le ballon, mais un coequipier
@@ -174,7 +176,7 @@ public class AgentJoueur extends GameObject {
                         System.out.println(getLocalName() + " a le ballon");
                         if (numeroEquipe == 1) {
                             if (ReglesDuJeu.getSeuilDeProximite() * 3 < pos.distance(ReglesDuJeu.getPosButEquipe2())) {//si je suis loin du but adverse
-                                pos.Approcher(ReglesDuJeu.getPosButEquipe2());
+                                pos.approcher(ReglesDuJeu.getPosButEquipe2());
                                 //vue.getVueTerrain().setBallonPos(new fr.alefebvre.school.footsma.modele.Position(pos));
                                 System.out.println(getLocalName() + " va au but");
                             } else {
@@ -183,7 +185,7 @@ public class AgentJoueur extends GameObject {
                             }
                         } else {
                             if (ReglesDuJeu.getSeuilDeProximite() * 3 < pos.distance(ReglesDuJeu.getPosButEquipe1())) {//si je suis loin du but adverse
-                                pos.Approcher(ReglesDuJeu.getPosButEquipe1());
+                                pos.approcher(ReglesDuJeu.getPosButEquipe1());
                                 //vue.getVueTerrain().setBallonPos(new fr.alefebvre.school.footsma.modele.Position(pos));
                                 System.out.println(getLocalName() + " va au but");
                             } else {

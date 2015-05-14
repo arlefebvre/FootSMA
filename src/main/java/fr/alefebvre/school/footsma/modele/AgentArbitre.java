@@ -12,7 +12,7 @@ public class AgentArbitre extends GameObject {
     private int scoreEquipe2;
     private int tempsDeJeu = 0;
     private Position pos;
-    private AgentTerrain terrain;
+    //private AgentTerrain terrain;
     private AgentHandler handler;
     private boolean coupDEnvoiDonne;
 
@@ -21,7 +21,8 @@ public class AgentArbitre extends GameObject {
     public void sifflerCoupDEnvoi() {
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
-        terrain.getJoueurs().forEach(joueur ->msg.addReceiver(joueur.getAID()));
+        handler.getJoueursIds().forEach(aid ->msg.addReceiver(aid));
+        //terrain.getJoueurs().forEach(joueur ->msg.addReceiver(joueur.getAID()));
         msg.setContent("Jouez");
         send(msg);
         coupDEnvoiDonne = true;
@@ -32,8 +33,8 @@ public class AgentArbitre extends GameObject {
         tempsDeJeu = (int) args[0];
         handler = (AgentHandler) args[1];
         handler.getObjects().add(this);
-        handler.setArbitre(this);
-        terrain = handler.getTerrain();
+        handler.setArbitreId(this.getAID());
+        //terrain = handler.getTerrain();
 
        /* ContainerController cc = getContainerController();
         AgentController equipe1 = null;
@@ -60,15 +61,10 @@ public class AgentArbitre extends GameObject {
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }*/
-        //sifflerCoupDEnvoi();
         addBehaviour(new TickerBehaviour(this, 5000) {
             protected void onTick() {
                 // perform operation Y
                 System.out.println(tempsDeJeu + " minutes jouées");
-                /*if (temps != null) {
-                    //fen.setTemps(new JLabel(String.valueOf(tempsDeJeu)+" min"));
-                    temps.setText(String.valueOf(tempsDeJeu) + " min");
-                }*/
                 if (tempsDeJeu >= 90) {
                     sifflerFinDuMatch();
                     myAgent.doDelete();
@@ -83,7 +79,7 @@ public class AgentArbitre extends GameObject {
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
         msg.setOntology("temps");
-        terrain.getJoueurs().forEach(j->msg.addReceiver(j.getAID()));
+        handler.getJoueursIds().forEach(aid->msg.addReceiver(aid));
         msg.setContent("STOP");
         send(msg);
     }

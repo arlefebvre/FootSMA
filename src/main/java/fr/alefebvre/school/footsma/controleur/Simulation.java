@@ -2,7 +2,6 @@ package fr.alefebvre.school.footsma.controleur;
 
 import fr.alefebvre.school.footsma.modele.*;
 import fr.alefebvre.school.footsma.vue.SimulationWindow;
-import fr.alefebvre.school.footsma.vue.VueJoueur;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -72,6 +71,8 @@ public class Simulation extends Canvas implements Runnable {
         argsT[0] = agentHandler;
         AgentController terrain = cc.createNewAgent("terrain",
                 AgentTerrain.class.getName(), argsT);
+        terrain.start();
+
 
         // Gardiens
         // Creation d'un joueur
@@ -89,7 +90,7 @@ public class Simulation extends Canvas implements Runnable {
         AgentController joueur4 = cc.createNewAgent("joueur4",
                 AgentJoueur.class.getName(), argsJoueur4);
 
-        terrain.start();
+
         joueur1.start();
         joueur2.start();
         joueur3.start();
@@ -107,27 +108,24 @@ public class Simulation extends Canvas implements Runnable {
 
     public static Object[] getArgsJoueur(AgentController terrain, AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
         Object[] argsJoueur = new Object[6];
-        VueJoueur vueJoueur5 = new VueJoueur();
         argsJoueur[0] = agentHandler;
         // couleur
-        if(estGardien)
+        if (estGardien)
             argsJoueur[1] = Color.YELLOW;
-        else if (numEquipe ==1 )
+        else if (numEquipe == 1)
             argsJoueur[1] = Color.RED;
         else
             argsJoueur[1] = Color.BLUE;
-        if(estGardien){
-            if(numEquipe == 1)
+        if (estGardien) {
+            if (numEquipe == 1)
                 argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe1());
             else
                 argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe2());
-        }
-        else
-        {
-            if(numEquipe == 1)
-                argsJoueur[2] = new Position(ReglesDuJeu.getPosMillieuTerrain());
+        } else {
+            if (numEquipe == 1)
+                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe1(),ReglesDuJeu.getPosMillieuTerrain());
             else
-                argsJoueur[2] = new Position(ReglesDuJeu.getPosMillieuTerrain());
+                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe2(),ReglesDuJeu.getPosMillieuTerrain());
         }
 
         argsJoueur[3] = numJoueur;
@@ -161,8 +159,8 @@ public class Simulation extends Canvas implements Runnable {
     public void run() {
         this.requestFocus();
         //long lastTime = System.nanoTime();
-       // final double amountOfTicks = 60.0;
-       // double ns = 1000000000 / amountOfTicks;
+        // final double amountOfTicks = 60.0;
+        // double ns = 1000000000 / amountOfTicks;
         //double delta = 0;
         int frames = 0;
         long timer = System.currentTimeMillis();
@@ -206,8 +204,13 @@ public class Simulation extends Canvas implements Runnable {
     }
 
     public void startMatch() {
-        if(agentHandler!=null){
+        if (agentHandler != null) {
             agentHandler.startMatch();
         }
+    }
+
+    public void endMatch() {
+        //stop();
+        System.exit(0);
     }
 }

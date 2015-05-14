@@ -20,7 +20,7 @@ public class AgentTerrain extends GameObject {
     private Position ballonPos = new Position(ReglesDuJeu.getPosMillieuTerrain());
     private boolean possessionEquipe1;
     private boolean possessionEquipe2;
-    private ArrayList<AgentJoueur> joueurs;
+    //private ArrayList<AgentJoueur> joueurs;
     private Position posJoueurAuBallon;
 
     public Position getBallonPos() {
@@ -66,9 +66,10 @@ public class AgentTerrain extends GameObject {
         Object[] args = getArguments();
         handler = (AgentHandler) args[0];
         handler.getObjects().add(this);
+        handler.setTerrainId(this.getAID());
         handler.setTerrain(this);
-        joueurs = new ArrayList<AgentJoueur>();
-        System.out.println("Agent" + getLocalName() + " est cr��");
+        //joueurs = new ArrayList<AgentJoueur>();
+        System.out.println("Agent" + getLocalName() + " est créé");
         // Make this agent terminate
         addBehaviour(new CyclicBehaviour(this) {
             public void action() {
@@ -183,13 +184,13 @@ public class AgentTerrain extends GameObject {
         this.possessionEquipe2 = possessionEquipe2;
     }
 
-    public ArrayList<AgentJoueur> getJoueurs() {
-        return joueurs;
-    }
+    //public ArrayList<AgentJoueur> getJoueurs() {
+    //    return joueurs;
+    //}
 
-    public void addJoueur(AgentJoueur aj){
-        joueurs.add(aj);
-    }
+    //public void addJoueur(AgentJoueur aj){
+    //    joueurs.add(aj);
+    //}
 
     public void setPosJoueurAuBallon(Position posJoueurAuBallon) {
         this.posJoueurAuBallon = posJoueurAuBallon;
