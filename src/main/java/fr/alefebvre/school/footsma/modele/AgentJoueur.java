@@ -15,10 +15,10 @@ import java.util.Objects;
 import java.util.Random;
 
 public class AgentJoueur extends GameObject {
-    //public VueJoueur vue = new VueJoueur();
-    private AgentHandler handler;
     public int count = 0;
     protected Position pos;
+    //public VueJoueur vue = new VueJoueur();
+    private AgentHandler handler;
     private Color couleurMaillot;
     private int numero;
     private int numeroEquipe;
@@ -48,7 +48,7 @@ public class AgentJoueur extends GameObject {
             gardien = (Boolean) args[4];
             //vue.setNumero(numero);
             numeroEquipe = (Integer) args[5];
-            handler.ajouteJoueur(this.getAID(),numeroEquipe);
+            handler.ajouteJoueur(this.getAID(), numeroEquipe);
             //vue.setNumeroEquipe(numeroEquipe);
             //vue.setVueTerrain((VueTerrain) args[6]);
             //terrain = (AgentTerrain) args[6];
@@ -128,7 +128,7 @@ public class AgentJoueur extends GameObject {
                                         }
                                     }*/
                                     AgentJoueur joueurAuBallon = handler.getJoueur(handler.getTerrain().getJoueurAuBallon());
-                                    if (joueurAuBallon!=null) {
+                                    if (joueurAuBallon != null) {
                                         if (tacles > joueurAuBallon.getDribles()) {
                                             handler.getTerrain().setPossession(numeroEquipe);
                                             possessionJoueur = true;

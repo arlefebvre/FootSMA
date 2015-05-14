@@ -61,6 +61,35 @@ public class Simulation extends Canvas implements Runnable {
         }
     }
 
+    public static Object[] getArgsJoueur(AgentController terrain, AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
+        Object[] argsJoueur = new Object[6];
+        argsJoueur[0] = agentHandler;
+        // couleur
+        if (estGardien)
+            argsJoueur[1] = Color.YELLOW;
+        else if (numEquipe == 1)
+            argsJoueur[1] = Color.RED;
+        else
+            argsJoueur[1] = Color.BLUE;
+        if (estGardien) {
+            if (numEquipe == 1)
+                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe1());
+            else
+                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe2());
+        } else {
+            if (numEquipe == 1)
+                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe1(), ReglesDuJeu.getPosMillieuTerrain());
+            else
+                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe2(), ReglesDuJeu.getPosMillieuTerrain());
+        }
+
+        argsJoueur[3] = numJoueur;
+        argsJoueur[4] = estGardien;
+        argsJoueur[5] = numEquipe;
+        //argsJoueur[6] = terrain;
+        return argsJoueur;
+    }
+
     public void initialize(Runtime rt, Profile profile) throws StaleProxyException {
         // Create a new non-main container, connecting to the default
         // main container (i.e. on this host, port 1099)
@@ -104,35 +133,6 @@ public class Simulation extends Canvas implements Runnable {
 
         //agentHandler.addMap(new TilesMap(0, 0, Constants.TEST_MAP_PATH));
         // agentHandler.getObjects().add(new Player(0, 0, 0, 0, agentHandler));
-    }
-
-    public static Object[] getArgsJoueur(AgentController terrain, AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
-        Object[] argsJoueur = new Object[6];
-        argsJoueur[0] = agentHandler;
-        // couleur
-        if (estGardien)
-            argsJoueur[1] = Color.YELLOW;
-        else if (numEquipe == 1)
-            argsJoueur[1] = Color.RED;
-        else
-            argsJoueur[1] = Color.BLUE;
-        if (estGardien) {
-            if (numEquipe == 1)
-                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe1());
-            else
-                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe2());
-        } else {
-            if (numEquipe == 1)
-                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe1(),ReglesDuJeu.getPosMillieuTerrain());
-            else
-                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe2(),ReglesDuJeu.getPosMillieuTerrain());
-        }
-
-        argsJoueur[3] = numJoueur;
-        argsJoueur[4] = estGardien;
-        argsJoueur[5] = numEquipe;
-        //argsJoueur[6] = terrain;
-        return argsJoueur;
     }
 
     public synchronized void start() {

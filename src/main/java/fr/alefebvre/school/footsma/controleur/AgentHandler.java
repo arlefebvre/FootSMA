@@ -64,9 +64,8 @@ public class AgentHandler {
         return terrainId;
     }
 
-    @Deprecated
-    public void setTerrain(AgentTerrain at) {
-        terrain = at;
+    public void setTerrainId(AID terrainId) {
+        this.terrainId = terrainId;
     }
 
     @Deprecated
@@ -74,23 +73,24 @@ public class AgentHandler {
         return terrain;
     }
 
-    public void setTerrainId(AID terrainId) {
-        this.terrainId = terrainId;
+    @Deprecated
+    public void setTerrain(AgentTerrain at) {
+        terrain = at;
     }
 
     public Stream<AID> getJoueursIds() {
-        return Stream.concat(equipe1.stream(),equipe2.stream());
+        return Stream.concat(equipe1.stream(), equipe2.stream());
     }
 
     public void ajouteJoueur(AID joueurAID, int numeroEquipe) {
-        if(numeroEquipe == 1)
+        if (numeroEquipe == 1)
             equipe1.add(joueurAID);
         else
             equipe2.add(joueurAID);
     }
 
-    public AgentJoueur getJoueur(AID id){
+    public AgentJoueur getJoueur(AID id) {
         Optional<GameObject> gameObject = objects.stream().filter(j -> j.getAID() == id).findFirst();
-            return (AgentJoueur) gameObject.orElse(null);
+        return (AgentJoueur) gameObject.orElse(null);
     }
 }

@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class AgentTerrain extends GameObject {
     private AgentHandler handler;
@@ -20,6 +19,11 @@ public class AgentTerrain extends GameObject {
     private boolean possessionEquipe1;
     private boolean possessionEquipe2;
     private Position posJoueurAuBallon;
+    private boolean ballonDisponible = true;
+    private AID joueurAuBallon;
+    private MessageTemplate template = MessageTemplate.and(
+            MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF),
+            MessageTemplate.MatchOntology("ballon"));
 
     public Position getBallonPos() {
         return ballonPos;
@@ -44,13 +48,6 @@ public class AgentTerrain extends GameObject {
     public void setJoueurAuBallon(AID joueurAuBallon) {
         this.joueurAuBallon = joueurAuBallon;
     }
-
-    private boolean ballonDisponible = true;
-    private AID joueurAuBallon;
-
-    private MessageTemplate template = MessageTemplate.and(
-            MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF),
-            MessageTemplate.MatchOntology("ballon"));
 
     protected void setup() {
         Object[] args = getArguments();
@@ -120,8 +117,16 @@ public class AgentTerrain extends GameObject {
         return possessionEquipe1;
     }
 
+    public void setPossessionEquipe1(boolean possessionEquipe1) {
+        this.possessionEquipe1 = possessionEquipe1;
+    }
+
     public boolean isPossessionEquipe2() {
         return possessionEquipe2;
+    }
+
+    public void setPossessionEquipe2(boolean possessionEquipe2) {
+        this.possessionEquipe2 = possessionEquipe2;
     }
 
     public void setPossession(int numero) {
@@ -135,14 +140,6 @@ public class AgentTerrain extends GameObject {
             setPossessionEquipe1(false);
             setPossessionEquipe2(false);
         }
-    }
-
-    public void setPossessionEquipe1(boolean possessionEquipe1) {
-        this.possessionEquipe1 = possessionEquipe1;
-    }
-
-    public void setPossessionEquipe2(boolean possessionEquipe2) {
-        this.possessionEquipe2 = possessionEquipe2;
     }
 
     public void setPosJoueurAuBallon(Position posJoueurAuBallon) {

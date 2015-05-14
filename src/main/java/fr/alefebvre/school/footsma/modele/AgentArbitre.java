@@ -38,7 +38,7 @@ public class AgentArbitre extends GameObject {
                 if (tempsDeJeu >= 90) {
                     sifflerFinDuMatch();
                     myAgent.doDelete();
-                } else if(coupDEnvoiDonne)
+                } else if (coupDEnvoiDonne)
                     tempsDeJeu++;
             }
         });
@@ -59,6 +59,6 @@ public class AgentArbitre extends GameObject {
 
     @Override
     public void render(Graphics g) {
-        g.drawString(String.valueOf(tempsDeJeu),0,0);
+        g.drawString(String.valueOf(tempsDeJeu), 0, 0);
     }
 }
