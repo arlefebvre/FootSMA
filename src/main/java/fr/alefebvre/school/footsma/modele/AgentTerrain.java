@@ -15,12 +15,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class AgentTerrain extends GameObject {
-    //private VueTerrain vue;
     private AgentHandler handler;
     private Position ballonPos = new Position(ReglesDuJeu.getPosMillieuTerrain());
     private boolean possessionEquipe1;
     private boolean possessionEquipe2;
-    //private ArrayList<AgentJoueur> joueurs;
     private Position posJoueurAuBallon;
 
     public Position getBallonPos() {
@@ -54,21 +52,13 @@ public class AgentTerrain extends GameObject {
             MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF),
             MessageTemplate.MatchOntology("ballon"));
 
-
     protected void setup() {
-        /*Object[] args = getArguments();
-        try {
-            vue = (VueTerrain) args[0];
-            //vue.setJoueurs((ArrayList<VueJoueur>) args[1]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         Object[] args = getArguments();
         handler = (AgentHandler) args[0];
         handler.getObjects().add(this);
         handler.setTerrainId(this.getAID());
         handler.setTerrain(this);
-        //joueurs = new ArrayList<AgentJoueur>();
+
         System.out.println("Agent" + getLocalName() + " est créé");
         // Make this agent terminate
         addBehaviour(new CyclicBehaviour(this) {
@@ -83,8 +73,6 @@ public class AgentTerrain extends GameObject {
                             reply.setPerformative(ACLMessage.INFORM);
                             reply.setContent("dispo");
                             ballonDisponible = false;
-                            //vue.setBallonDisponible(false);
-                            //vue.setJoueurAuBallon(msg.getSender());
                             joueurAuBallon = msg.getSender();
                         } else {
                             reply.setPerformative(ACLMessage.INFORM);
@@ -95,47 +83,20 @@ public class AgentTerrain extends GameObject {
                         reply.setContent("Unknown-content");
                     }
                     myAgent.send(reply);
-                    //System.out.println(myAgent.getLocalName()+" a repondu "+reply.getContent()+" a "+msg.getSender().getLocalName());
                 } else {
                     block();
                 }
-
-					/*ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
-					//ACLMessage msg = myAgent.receive();
-					if (msg != null) {
-					// Process the message
-						//System.out.println(myAgent.getLocalName()+" a re�u un message ");
-						if(msg.getContent()=="BALLONDISPO"){
-							System.out.println(myAgent.getLocalName()+" a re�u un message de "+msg.getSender().getLocalName());
-							ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
-							reply.addReceiver(msg.getSender());
-							
-							if(ballonDisponible==true){
-								reply.setContent("Personne");
-								ballonDisponible=false;
-								joueurAuBallon=msg.getSender();
-							} else {
-								reply.setContent(joueurAuBallon.getLocalName());
-							}
-							send(reply);
-							System.out.println(myAgent.getLocalName()+" a repondu a "+msg.getSender().getLocalName());
-						}
-					}*/
             }
-
         });
-        //doDelete();
     }
 
     public void doDelete() {
         super.doDelete();
-        //vue.removeAll();
     }
 
     protected void takeDown() {
         System.out.println("Agent " + getLocalName() + ": terminating");
     }
-
 
     @Override
     public void render(Graphics g) {
@@ -183,14 +144,6 @@ public class AgentTerrain extends GameObject {
     public void setPossessionEquipe2(boolean possessionEquipe2) {
         this.possessionEquipe2 = possessionEquipe2;
     }
-
-    //public ArrayList<AgentJoueur> getJoueurs() {
-    //    return joueurs;
-    //}
-
-    //public void addJoueur(AgentJoueur aj){
-    //    joueurs.add(aj);
-    //}
 
     public void setPosJoueurAuBallon(Position posJoueurAuBallon) {
         this.posJoueurAuBallon = posJoueurAuBallon;

@@ -12,17 +12,13 @@ public class AgentArbitre extends GameObject {
     private int scoreEquipe2;
     private int tempsDeJeu = 0;
     private Position pos;
-    //private AgentTerrain terrain;
     private AgentHandler handler;
     private boolean coupDEnvoiDonne;
-
-    //private MessageTemplate template = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),MessageTemplate.MatchOntology("temps"));
 
     public void sifflerCoupDEnvoi() {
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
-        handler.getJoueursIds().forEach(aid ->msg.addReceiver(aid));
-        //terrain.getJoueurs().forEach(joueur ->msg.addReceiver(joueur.getAID()));
+        handler.getJoueursIds().forEach(msg::addReceiver);
         msg.setContent("Jouez");
         send(msg);
         coupDEnvoiDonne = true;
@@ -34,33 +30,7 @@ public class AgentArbitre extends GameObject {
         handler = (AgentHandler) args[1];
         handler.getObjects().add(this);
         handler.setArbitreId(this.getAID());
-        //terrain = handler.getTerrain();
 
-       /* ContainerController cc = getContainerController();
-        AgentController equipe1 = null;
-        AgentController equipe2 = null;
-        Object[] arg1 = new Object[2];
-        arg1[0] = 1;
-        arg1[1] = terrain;
-        Object[] arg2 = new Object[2];
-        arg2[0] = 2;
-        arg1[1] = terrain;
-        try {
-            equipe1 = cc.createNewAgent("equipe1", AgentEquipe.class.getName(), arg1);
-            equipe2 = cc.createNewAgent("equipe2", AgentEquipe.class.getName(), arg2);
-        } catch (StaleProxyException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (equipe1 != null) {
-                equipe1.start();
-            }
-            if (equipe2 != null) {
-                equipe2.start();
-            }
-        } catch (StaleProxyException e) {
-            e.printStackTrace();
-        }*/
         addBehaviour(new TickerBehaviour(this, 5000) {
             protected void onTick() {
                 // perform operation Y
@@ -72,14 +42,13 @@ public class AgentArbitre extends GameObject {
                     tempsDeJeu++;
             }
         });
-
     }
 
     public void sifflerFinDuMatch() {
         ACLMessage msg;
         msg = new ACLMessage(ACLMessage.REQUEST);
         msg.setOntology("temps");
-        handler.getJoueursIds().forEach(aid->msg.addReceiver(aid));
+        handler.getJoueursIds().forEach(msg::addReceiver);
         msg.setContent("STOP");
         send(msg);
     }

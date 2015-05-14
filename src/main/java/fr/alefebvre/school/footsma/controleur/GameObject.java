@@ -73,7 +73,5 @@ public abstract class GameObject extends Agent {
         this.velY = velY;
     }
 
-    //public abstract void tick();
-
     public abstract void render(Graphics g);
 }
