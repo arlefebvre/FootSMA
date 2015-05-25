@@ -91,11 +91,11 @@ public class Simulation extends Canvas implements Runnable {
         argsJoueur[0] = agentHandler;
         // couleur
         if (estGardien)
-            argsJoueur[1] = Color.YELLOW;
+            argsJoueur[1] = Constants.COULEUR_GARDIENS;
         else if (numEquipe == 1)
-            argsJoueur[1] = Color.RED;
+            argsJoueur[1] = Constants.COULEUR_EQUIPE_1;
         else
-            argsJoueur[1] = Color.BLUE;
+            argsJoueur[1] = Constants.COULEUR_EQUIPE_2;
         if (estGardien) {
             if (numEquipe == 1)
                 argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe1());

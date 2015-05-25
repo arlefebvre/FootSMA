@@ -26,6 +26,7 @@
 package fr.alefebvre.school.footsma.modele;
 
 import fr.alefebvre.school.footsma.controleur.AgentHandler;
+import fr.alefebvre.school.footsma.controleur.Constants;
 import fr.alefebvre.school.footsma.controleur.GameObject;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
@@ -131,7 +132,7 @@ public class AgentTerrain extends GameObject {
         }
         g.setColor(Color.WHITE);
         g.fillOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
-        g.setColor(Color.BLACK);
+        g.setColor(Constants.COULEUR_ARBITRE);
         g.drawOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
         g.fillOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
         g.setColor(Color.WHITE);

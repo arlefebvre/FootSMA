@@ -25,7 +25,13 @@
 
 package fr.alefebvre.school.footsma.controleur;
 
+import java.awt.*;
+
 public class Constants {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 450;
+    public static final Color COULEUR_GARDIENS = Color.BLACK;
+    public static final Color COULEUR_EQUIPE_1 = Color.RED;
+    public static final Color COULEUR_EQUIPE_2 = Color.BLUE;
+    public static final Color COULEUR_ARBITRE = Color.YELLOW;
 }
