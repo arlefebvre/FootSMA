@@ -40,15 +40,6 @@ public class Position {
         this.y = p.y;
     }
 
-    private static int limit(int n, int min, int max) {
-        if (n < min)
-            return min;
-        else if (n > max)
-            return max;
-        else
-            return n;
-    }
-
     public static Position milieu(Position p1, Position p2) {
         return new Position((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
     }
@@ -58,7 +49,7 @@ public class Position {
     }
 
     public void setX(int xx) {
-        this.x = limit(xx, 10, ReglesDuJeu.getLongueurTerrain() - 10);
+        this.x = MathHelper.limit(xx, 10, ReglesDuJeu.getLongueurTerrain() - 10);
     }
 
     public int getY() {
@@ -66,7 +57,7 @@ public class Position {
     }
 
     public void setY(int yy) {
-        this.y = limit(yy, 10, ReglesDuJeu.getLargeurTerrain() - 10);
+        this.y = MathHelper.limit(yy, 10, ReglesDuJeu.getLargeurTerrain() - 10);
     }
 
     public double distance(Position a) {
