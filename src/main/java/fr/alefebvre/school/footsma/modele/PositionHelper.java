@@ -23,40 +23,15 @@
  *
  */
 
-import fr.alefebvre.school.footsma.modele.Position;
-import fr.alefebvre.school.footsma.modele.PositionHelper;
-import org.junit.Test;
+package fr.alefebvre.school.footsma.modele;
 
-import static org.junit.Assert.assertEquals;
+public abstract class PositionHelper {
 
-public class PositionTest {
-
-    @Test
-    public void approcherFuir(){
-        Position p1 = new Position(0,0);
-        Position p2 = new Position(0,0);
-
-        double d1 = PositionHelper.distance(p1,p2);
-
-        p1.Fuir(p2);
-        p1.Fuir(p2);
-        p2.approcher(p1);
-        p2.approcher(p1);
-
-        double d2 = PositionHelper.distance(p1,p2);
-
-        assertEquals(d1,d2,1e-15);
+    public static Position milieu(Position p1, Position p2) {
+        return new Position((p1.getX() + p2.getX()) / 2, (p1.getY() + p2.getY()) / 2);
     }
 
-    @Test
-    public void millieu(){
-        Position p1 = new Position(0,0);
-        Position p2 = new Position(2,2);
-
-       Position p3 = PositionHelper.milieu(p1,p2);
-
-        Position valeurAttendue = new Position(1,1);
-
-        assertEquals(p3,valeurAttendue);
+    public static double distance(Position a,Position b) {
+        return MathHelper.distance(a.getX(),a.getY(),b.getX(),b.getY());
     }
 }

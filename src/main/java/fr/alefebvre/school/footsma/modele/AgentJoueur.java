@@ -126,7 +126,7 @@ public class AgentJoueur extends GameObject {
                 //else
                 if (!possessionEquipe && !gardien) { //Si mon equipe n'a pas le ballon
                     //System.out.println(getLocalName()+ ": mon equipe n'a pas le ballon");
-                    if (ReglesDuJeu.getSeuilDeProximite() >= pos.distance(handler.getTerrain().getBallonPos())) {
+                    if (ReglesDuJeu.getSeuilDeProximite() >= PositionHelper.distance(pos,handler.getTerrain().getBallonPos())) {
                         //Si on est a proximité du ballon
                         System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
                         //On demande d'abord au handler.getTerrain() si le ballon est disponible
@@ -200,7 +200,7 @@ public class AgentJoueur extends GameObject {
                     } else { // Si j'ai le ballon
                         System.out.println(getLocalName() + " a le ballon");
                         if (numeroEquipe == 1) {
-                            if (ReglesDuJeu.getSeuilDeProximite() * 3 < pos.distance(ReglesDuJeu.getPosButEquipe2())) {//si je suis loin du but adverse
+                            if (ReglesDuJeu.getSeuilDeProximite() * 3 < PositionHelper.distance(pos,ReglesDuJeu.getPosButEquipe2())) {//si je suis loin du but adverse
                                 pos.approcher(ReglesDuJeu.getPosButEquipe2());
                                 //vue.getVueTerrain().setBallonPos(new fr.alefebvre.school.footsma.modele.Position(pos));
                                 System.out.println(getLocalName() + " va au but");
@@ -209,7 +209,7 @@ public class AgentJoueur extends GameObject {
                                 System.out.println(getLocalName() + " tente une frappe");
                             }
                         } else {
-                            if (ReglesDuJeu.getSeuilDeProximite() * 3 < pos.distance(ReglesDuJeu.getPosButEquipe1())) {//si je suis loin du but adverse
+                            if (ReglesDuJeu.getSeuilDeProximite() * 3 < PositionHelper.distance(pos,ReglesDuJeu.getPosButEquipe1())) {//si je suis loin du but adverse
                                 pos.approcher(ReglesDuJeu.getPosButEquipe1());
                                 //vue.getVueTerrain().setBallonPos(new fr.alefebvre.school.footsma.modele.Position(pos));
                                 System.out.println(getLocalName() + " va au but");

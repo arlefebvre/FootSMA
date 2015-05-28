@@ -40,8 +40,20 @@ public class Position {
         this.y = p.y;
     }
 
-    public static Position milieu(Position p1, Position p2) {
-        return new Position((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Position p = (Position) o;
+        return this.x == p.getX() && this.y == p.getY();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + x;
+        hash = hash * 31 + y;
+        return hash;
     }
 
     public int getX() {
@@ -58,10 +70,6 @@ public class Position {
 
     public void setY(int yy) {
         this.y = MathHelper.limit(yy, 10, ReglesDuJeu.getLargeurTerrain() - 10);
-    }
-
-    public double distance(Position a) {
-        return Math.sqrt((a.getX() - getX()) * (a.getX() - getX()) + (a.getY() - getY()) * (a.getY() - getY()));
     }
 
     public void approcher(Position p) {

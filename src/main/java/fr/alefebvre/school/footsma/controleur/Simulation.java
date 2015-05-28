@@ -91,11 +91,11 @@ public class Simulation extends Canvas implements Runnable {
         argsJoueur[0] = agentHandler;
         // couleur
         if (estGardien)
-            argsJoueur[1] = Constants.COULEUR_GARDIENS;
+            argsJoueur[1] = ReglesDuJeu.COULEUR_GARDIENS;
         else if (numEquipe == 1)
-            argsJoueur[1] = Constants.COULEUR_EQUIPE_1;
+            argsJoueur[1] = ReglesDuJeu.COULEUR_EQUIPE_1;
         else
-            argsJoueur[1] = Constants.COULEUR_EQUIPE_2;
+            argsJoueur[1] = ReglesDuJeu.COULEUR_EQUIPE_2;
         if (estGardien) {
             if (numEquipe == 1)
                 argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe1());
@@ -103,9 +103,9 @@ public class Simulation extends Canvas implements Runnable {
                 argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe2());
         } else {
             if (numEquipe == 1)
-                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe1(), ReglesDuJeu.getPosMillieuTerrain());
+                argsJoueur[2] = PositionHelper.milieu(ReglesDuJeu.getPosButEquipe1(), ReglesDuJeu.getPosMillieuTerrain());
             else
-                argsJoueur[2] = Position.milieu(ReglesDuJeu.getPosButEquipe2(), ReglesDuJeu.getPosMillieuTerrain());
+                argsJoueur[2] = PositionHelper.milieu(ReglesDuJeu.getPosButEquipe2(), ReglesDuJeu.getPosMillieuTerrain());
         }
 
         argsJoueur[3] = numJoueur;

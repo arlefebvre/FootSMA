@@ -132,7 +132,7 @@ public class AgentTerrain extends GameObject {
         }
         g.setColor(Color.WHITE);
         g.fillOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
-        g.setColor(Constants.COULEUR_ARBITRE);
+        g.setColor(ReglesDuJeu.COULEUR_ARBITRE);
         g.drawOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
         g.fillOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
         g.setColor(Color.WHITE);

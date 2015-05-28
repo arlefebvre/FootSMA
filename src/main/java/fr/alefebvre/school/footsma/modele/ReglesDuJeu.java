@@ -25,8 +25,14 @@
 
 package fr.alefebvre.school.footsma.modele;
 
+import java.awt.*;
+
 public abstract class ReglesDuJeu {
     public static final int NBJOUEURS = 4;
+    public static final Color COULEUR_GARDIENS = Color.BLACK;
+    public static final Color COULEUR_EQUIPE_1 = Color.RED;
+    public static final Color COULEUR_EQUIPE_2 = Color.BLUE;
+    public static final Color COULEUR_ARBITRE = Color.YELLOW;
     private static final int largeurTerrain = 290;
     private static final int longueurTerrain = 440;
     private static Position posMillieuTerrain = new Position(225, 145);
