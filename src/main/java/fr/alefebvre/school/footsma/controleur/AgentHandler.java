@@ -41,9 +41,9 @@ public class AgentHandler {
 
     protected CopyOnWriteArrayList<GameObject> objects = new CopyOnWriteArrayList<>();
 
-    private Set<AID> equipe1 = new HashSet<AID>();
+    private Set<AID> equipe1 = new HashSet<>();
 
-    private Set<AID> equipe2 = new HashSet<AID>();
+    private Set<AID> equipe2 = new HashSet<>();
 
     private AID arbitreId;
 
@@ -56,8 +56,6 @@ public class AgentHandler {
 
     /**
      * Rendu de tous les agents
-     *
-     * @param g
      */
     public void render(Graphics g) {
         objects.forEach(agent -> agent.render(g));
@@ -68,17 +66,11 @@ public class AgentHandler {
      */
     public void startMatch() {
         if (arbitreId != null) {
-            for (GameObject go : objects) {
-                if (go.getAID() == arbitreId) {
-                    AgentArbitre arbitre = (AgentArbitre) go;
-                    arbitre.sifflerCoupDEnvoi();
-                }
-            }
+            objects.stream().filter(go -> go.getAID() == arbitreId).forEach(go -> {
+                AgentArbitre arbitre = (AgentArbitre) go;
+                arbitre.sifflerCoupDEnvoi();
+            });
         }
-    }
-
-    public AID getArbitreId() {
-        return arbitreId;
     }
 
     public void setArbitreId(AID arbitreId) {
