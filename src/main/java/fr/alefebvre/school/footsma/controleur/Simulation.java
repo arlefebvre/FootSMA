@@ -98,14 +98,14 @@ public class Simulation extends Canvas implements Runnable {
             argsJoueur[1] = ReglesDuJeu.COULEUR_EQUIPE_2;
         if (estGardien) {
             if (numEquipe == 1)
-                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe1());
+                argsJoueur[2] = new Position(ReglesDuJeu.BUT_EQUIPE_1);
             else
-                argsJoueur[2] = new Position(ReglesDuJeu.getPosButEquipe2());
+                argsJoueur[2] = new Position(ReglesDuJeu.BUT_EQUIPE_2);
         } else {
             if (numEquipe == 1)
-                argsJoueur[2] = PositionHelper.milieu(ReglesDuJeu.getPosButEquipe1(), ReglesDuJeu.getPosMillieuTerrain());
+                argsJoueur[2] = PositionHelper.milieu(ReglesDuJeu.BUT_EQUIPE_1, ReglesDuJeu.MILIEU_DE_TERRAIN);
             else
-                argsJoueur[2] = PositionHelper.milieu(ReglesDuJeu.getPosButEquipe2(), ReglesDuJeu.getPosMillieuTerrain());
+                argsJoueur[2] = PositionHelper.milieu(ReglesDuJeu.BUT_EQUIPE_2, ReglesDuJeu.MILIEU_DE_TERRAIN);
         }
 
         argsJoueur[3] = numJoueur;

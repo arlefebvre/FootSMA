@@ -41,7 +41,7 @@ import java.io.IOException;
 
 public class AgentTerrain extends GameObject {
     private AgentHandler handler;
-    private Position ballonPos = new Position(ReglesDuJeu.getPosMillieuTerrain());
+    private Position ballonPos = new Position(ReglesDuJeu.MILIEU_DE_TERRAIN);
     private boolean possessionEquipe1;
     private boolean possessionEquipe2;
     private Position posJoueurAuBallon;

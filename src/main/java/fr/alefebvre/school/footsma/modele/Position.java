@@ -61,7 +61,7 @@ public class Position {
     }
 
     public void setX(int xx) {
-        this.x = MathHelper.limit(xx, 10, ReglesDuJeu.getLongueurTerrain() - 10);
+        this.x = MathHelper.limit(xx, 10, ReglesDuJeu.LONGUEUR_TERRAIN - 10);
     }
 
     public int getY() {
@@ -69,7 +69,7 @@ public class Position {
     }
 
     public void setY(int yy) {
-        this.y = MathHelper.limit(yy, 10, ReglesDuJeu.getLargeurTerrain() - 10);
+        this.y = MathHelper.limit(yy, 10, ReglesDuJeu.LARGEUR_TERRAIN - 10);
     }
 
     public void approcher(Position p) {
