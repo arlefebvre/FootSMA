@@ -30,6 +30,7 @@ import fr.alefebvre.school.footsma.vue.SimulationWindow;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
@@ -45,10 +46,10 @@ public class Simulation extends Canvas implements Runnable {
     private Thread thread;
     private AgentHandler agentHandler;
 
-    public Simulation(Runtime rt, Profile profile) throws StaleProxyException {
+    public Simulation(AgentContainer agentContainer) throws StaleProxyException {
         new SimulationWindow(Constants.WIDTH, Constants.HEIGHT, "Football simulation", this);
         agentHandler = new AgentHandler();
-        initialize(rt, profile);
+        initialize(agentContainer);
     }
 
     public static void main(String[] args) {
@@ -70,7 +71,7 @@ public class Simulation extends Canvas implements Runnable {
         ProfileImpl pContainer = new ProfileImpl(null, 1200, null);
         System.out.println("Launching the agent container ..." + pContainer);
 
-        jade.wrapper.AgentContainer cont = rt.createAgentContainer(pContainer);
+        jade.wrapper.AgentContainer agentContainer = rt.createAgentContainer(pContainer);
         System.out.println("Launching the agent container after ..." + pContainer);
 
         System.out.println("containers created");
@@ -80,7 +81,7 @@ public class Simulation extends Canvas implements Runnable {
             rma = mainContainer.createNewAgent("rma",
                     "jade.tools.rma.rma", new Object[0]);
             rma.start();
-            new Simulation(rt, profile);
+            new Simulation(agentContainer);
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
@@ -115,33 +116,30 @@ public class Simulation extends Canvas implements Runnable {
         return argsJoueur;
     }
 
-    public void initialize(Runtime rt, Profile profile) throws StaleProxyException {
-        // Create a new non-main container, connecting to the default
-        // main container (i.e. on this host, port 1099)
-        ContainerController cc = rt.createAgentContainer(profile);
+    public void initialize(AgentContainer agentContainer) throws StaleProxyException {
 
         agentHandler.getObjects().clear();
         Object[] argsT = new Object[1];
         argsT[0] = agentHandler;
-        AgentController terrain = cc.createNewAgent("terrain",
+        AgentController terrain = agentContainer.createNewAgent("terrain",
                 AgentTerrain.class.getName(), argsT);
         terrain.start();
 
-
         // Gardiens
-        // Creation d'un joueur
         Object[] argsJoueur1 = getArgsJoueur(terrain, agentHandler, true, 1, 1);
-        Object[] argsJoueur2 = getArgsJoueur(terrain, agentHandler, false, 1, 9);
-        Object[] argsJoueur3 = getArgsJoueur(terrain, agentHandler, true, 2, 1);
+        Object[] argsJoueur2 = getArgsJoueur(terrain, agentHandler, true, 2, 1);
+
+        // Creation des joueurs
+        Object[] argsJoueur3 = getArgsJoueur(terrain, agentHandler, false, 1, 9);
         Object[] argsJoueur4 = getArgsJoueur(terrain, agentHandler, false, 2, 10);
 
-        AgentController joueur1 = cc.createNewAgent("joueur1", AgentJoueur.class.getName(),
+        AgentController joueur1 = agentContainer.createNewAgent("joueur1", AgentJoueur.class.getName(),
                 argsJoueur1);
-        AgentController joueur2 = cc.createNewAgent("joueur2",
+        AgentController joueur2 = agentContainer.createNewAgent("joueur2",
                 AgentJoueur.class.getName(), argsJoueur2);
-        AgentController joueur3 = cc.createNewAgent("joueur3", AgentJoueur.class.getName(),
+        AgentController joueur3 = agentContainer.createNewAgent("joueur3", AgentJoueur.class.getName(),
                 argsJoueur3);
-        AgentController joueur4 = cc.createNewAgent("joueur4",
+        AgentController joueur4 = agentContainer.createNewAgent("joueur4",
                 AgentJoueur.class.getName(), argsJoueur4);
 
 
@@ -153,7 +151,7 @@ public class Simulation extends Canvas implements Runnable {
         Object[] argsArbitre = new Object[2];
         argsArbitre[0] = 0;
         argsArbitre[1] = agentHandler;
-        AgentController arbitre = cc.createNewAgent("Arbitre", AgentArbitre.class.getName(), argsArbitre);
+        AgentController arbitre = agentContainer.createNewAgent("Arbitre", AgentArbitre.class.getName(), argsArbitre);
         arbitre.start();
 
         //agentHandler.addMap(new TilesMap(0, 0, Constants.TEST_MAP_PATH));
