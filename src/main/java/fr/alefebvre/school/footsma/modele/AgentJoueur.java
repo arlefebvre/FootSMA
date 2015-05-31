@@ -41,7 +41,6 @@ import java.util.Objects;
 import java.util.Random;
 
 public class AgentJoueur extends GameObject {
-    public int count = 0;
     protected Position pos;
     private AgentHandler handler;
     private Color couleurMaillot;
@@ -57,6 +56,11 @@ public class AgentJoueur extends GameObject {
     private int arrets;
     private int tirs;
     private boolean possession;
+    private boolean pretAEffectuerUneAction = true;
+
+    public void setPretAEffectuerUneAction(boolean pretAEffectuerUneAction) {
+        this.pretAEffectuerUneAction = pretAEffectuerUneAction;
+    }
 
     protected void setup() {
         Object[] args = getArguments();
@@ -106,50 +110,54 @@ public class AgentJoueur extends GameObject {
         comportementparallele.addSubBehaviour(new TickerBehaviour(this, vitesse) {
             @Override
             protected void onTick() {
-                if (numeroEquipe == 1) {
-                    possessionEquipe = handler.getTerrain().isPossessionEquipe1();
+                if (pretAEffectuerUneAction) {
+                    if (numeroEquipe == 1) {
+                        possessionEquipe = handler.getTerrain().isPossessionEquipe1();
 
-                } else possessionEquipe = handler.getTerrain().isPossessionEquipe2();
+                    } else possessionEquipe = handler.getTerrain().isPossessionEquipe2();
 
-                //Si mon equipe n'a pas le ballon
-                if (!possessionEquipe && !gardien) {
-                    //Si on est a proximité du ballon
-                    if (ReglesDuJeu.SEUIL_PROXIMITE >= PositionHelper.distance(pos, handler.getTerrain().getBallonPos())) {
+                    //Si mon equipe n'a pas le ballon
+                    if (!possessionEquipe && !gardien) {
+                        //Si on est a proximité du ballon
+                        if (ReglesDuJeu.SEUIL_PROXIMITE >= PositionHelper.distance(pos, handler.getTerrain().getBallonPos())) {
 
-                        //System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
-                        //On demande d'abord au handler.getTerrain() si le ballon est disponible
-                        ACLMessage demandeBallon = new ACLMessage(ACLMessage.QUERY_IF);
-                        demandeBallon.setOntology("ballon");
-                        demandeBallon.addReceiver(new AID("handler.getTerrain()", AID.ISLOCALNAME));
-                        demandeBallon.setContent("BALLONDISPO");
-                        send(demandeBallon);
-                        //System.out.println(myAgent.getLocalName()+" a effectué une demande pour savoir si le ballon etait disponible");
-                        //TODO récupérer la réponse
-                        if (!handler.getTerrain().isBallonDisponible())
-                            tenterTacle();
-                        else
-                            prendreLeBallon(myAgent);
-                    } else {
-                        avancerVersBallon();
-                    }
-                } else if (!gardien) { // Si mon equipe a le ballon
-                    //System.out.println(getLocalName() + ": mon equipe a le ballon");
-                    if (!possessionJoueur) {// Si ce n'est pas moi qui ait le ballon, mais un coequipier
-                        seDemarquer();
-                    } else { // Si j'ai le ballon
-                        //System.out.println(getLocalName() + " a le ballon");
-                        Position butAdverse;
-                        if (numeroEquipe == 1)
-                            butAdverse = ReglesDuJeu.BUT_EQUIPE_2;
-                        else
-                            butAdverse = ReglesDuJeu.BUT_EQUIPE_1;
-
-                        if (ReglesDuJeu.SEUIL_PROXIMITE * 3 < PositionHelper.distance(pos, butAdverse)) {//si je suis loin du but adverse
-                            allerAuBut(butAdverse);
+                            //System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
+                            //On demande d'abord au handler.getTerrain() si le ballon est disponible
+                            ACLMessage demandeBallon = new ACLMessage(ACLMessage.QUERY_IF);
+                            demandeBallon.setOntology("ballon");
+                            demandeBallon.addReceiver(new AID("handler.getTerrain()", AID.ISLOCALNAME));
+                            demandeBallon.setContent("BALLONDISPO");
+                            send(demandeBallon);
+                            //System.out.println(myAgent.getLocalName()+" a effectué une demande pour savoir si le ballon etait disponible");
+                            //TODO récupérer la réponse
+                            if (!handler.getTerrain().isBallonDisponible())
+                                tenterTacle();
+                            else
+                                prendreLeBallon(myAgent);
                         } else {
-                            tenterFrappe();
+                            avancerVersBallon();
+                        }
+                    } else if (!gardien) { // Si mon equipe a le ballon
+                        //System.out.println(getLocalName() + ": mon equipe a le ballon");
+                        if (!possessionJoueur) {// Si ce n'est pas moi qui ait le ballon, mais un coequipier
+                            seDemarquer();
+                        } else { // Si j'ai le ballon
+                            //System.out.println(getLocalName() + " a le ballon");
+                            Position butAdverse;
+                            if (numeroEquipe == 1)
+                                butAdverse = ReglesDuJeu.BUT_EQUIPE_2;
+                            else
+                                butAdverse = ReglesDuJeu.BUT_EQUIPE_1;
+
+                            if (ReglesDuJeu.SEUIL_PROXIMITE * 3 < PositionHelper.distance(pos, butAdverse)) {//si je suis loin du but adverse
+                                allerAuBut(butAdverse);
+                            } else {
+                                tenterFrappe();
+                            }
                         }
                     }
+                } else {
+                    pretAEffectuerUneAction = true;
                 }
             }
 
@@ -222,10 +230,13 @@ public class AgentJoueur extends GameObject {
                         possessionJoueur = true;
                         handler.getTerrain().setBallonPos(pos);
                         joueurAuBallon.setPossessionJoueur(false);
+                        // Après avoir subi un tacle on ne peut pas effectuer tout de suite une nouvelle action
+                        joueurAuBallon.setPretAEffectuerUneAction(false);
                         System.out.println(getLocalName() + " a reussi un tacle");
 
                     } else {
-                        count += 1;
+                        // Après avoir subi un dribble on ne peut pas effectuer tout de suite une nouvelle action
+                        pretAEffectuerUneAction = false;
                         System.out.println(joueurAuBallon.getLocalName() + " a reussi un dribble");
                     }
                 } else System.out.println("Cible du tacle non trouvée");

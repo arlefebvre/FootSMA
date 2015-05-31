@@ -111,7 +111,6 @@ public class Simulation extends Canvas implements Runnable {
         argsJoueur[3] = numJoueur;
         argsJoueur[4] = estGardien;
         argsJoueur[5] = numEquipe;
-        //argsJoueur[6] = terrain;
         return argsJoueur;
     }
 
@@ -132,13 +131,13 @@ public class Simulation extends Canvas implements Runnable {
         Object[] argsJoueur3 = getArgsJoueur(agentHandler, false, 1, 9);
         Object[] argsJoueur4 = getArgsJoueur(agentHandler, false, 2, 10);
 
-        AgentController joueur1 = agentContainer.createNewAgent("joueur1", AgentJoueur.class.getName(),
+        AgentController joueur1 = agentContainer.createNewAgent("Lloris", AgentJoueur.class.getName(),
                 argsJoueur1);
-        AgentController joueur2 = agentContainer.createNewAgent("joueur2",
+        AgentController joueur2 = agentContainer.createNewAgent("Mandanda",
                 AgentJoueur.class.getName(), argsJoueur2);
-        AgentController joueur3 = agentContainer.createNewAgent("joueur3", AgentJoueur.class.getName(),
+        AgentController joueur3 = agentContainer.createNewAgent("Benzema", AgentJoueur.class.getName(),
                 argsJoueur3);
-        AgentController joueur4 = agentContainer.createNewAgent("joueur4",
+        AgentController joueur4 = agentContainer.createNewAgent("Gignac",
                 AgentJoueur.class.getName(), argsJoueur4);
 
 
