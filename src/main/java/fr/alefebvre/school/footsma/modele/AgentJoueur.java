@@ -28,6 +28,7 @@ package fr.alefebvre.school.footsma.modele;
 import fr.alefebvre.school.footsma.controleur.AgentHandler;
 import fr.alefebvre.school.footsma.controleur.GameObject;
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
@@ -42,7 +43,6 @@ import java.util.Random;
 public class AgentJoueur extends GameObject {
     public int count = 0;
     protected Position pos;
-    //public VueJoueur vue = new VueJoueur();
     private AgentHandler handler;
     private Color couleurMaillot;
     private int numero;
@@ -56,7 +56,6 @@ public class AgentJoueur extends GameObject {
     private int dribles;
     private int arrets;
     private int tirs;
-    //private AgentTerrain terrain;
     private boolean possession;
 
     protected void setup() {
@@ -94,15 +93,6 @@ public class AgentJoueur extends GameObject {
         //possession(possessionJoueur);
         System.out.println("Agent" + getLocalName() + " est créé");
 
-		/*addBehaviour(new OneShotBehaviour(this){
-            public void action(){
-			    //pos.setX(pos.getX()+20);
-			  // pos.setY(pos.getY()+50);
-			   // vue.setPos(pos);
-		  }
-	  });
-		System.out.println("end of behaviour oneshot");*/
-
         System.out.println("Agent " + getLocalName() + ": en attente du coup d'envoi...");
         ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
         System.out.println("Agent " + getLocalName() + ": a entendu l'arbitre siffler le coup d'envoi");
@@ -116,19 +106,17 @@ public class AgentJoueur extends GameObject {
         comportementparallele.addSubBehaviour(new TickerBehaviour(this, vitesse) {
             @Override
             protected void onTick() {
-                //System.out.println("Tick");
-                //System.out.println(myAgent.getLocalName()+"cherche la prochaine action qu'il va effectuer");
                 if (numeroEquipe == 1) {
                     possessionEquipe = handler.getTerrain().isPossessionEquipe1();
 
                 } else possessionEquipe = handler.getTerrain().isPossessionEquipe2();
-                //if(count>0) count--;
-                //else
-                if (!possessionEquipe && !gardien) { //Si mon equipe n'a pas le ballon
-                    //System.out.println(getLocalName()+ ": mon equipe n'a pas le ballon");
-                    if (ReglesDuJeu.SEUIL_PROXIMITE >= PositionHelper.distance(pos,handler.getTerrain().getBallonPos())) {
-                        //Si on est a proximité du ballon
-                        System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
+
+                //Si mon equipe n'a pas le ballon
+                if (!possessionEquipe && !gardien) {
+                    //Si on est a proximité du ballon
+                    if (ReglesDuJeu.SEUIL_PROXIMITE >= PositionHelper.distance(pos, handler.getTerrain().getBallonPos())) {
+
+                        //System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
                         //On demande d'abord au handler.getTerrain() si le ballon est disponible
                         ACLMessage demandeBallon = new ACLMessage(ACLMessage.QUERY_IF);
                         demandeBallon.setOntology("ballon");
@@ -136,111 +124,52 @@ public class AgentJoueur extends GameObject {
                         demandeBallon.setContent("BALLONDISPO");
                         send(demandeBallon);
                         //System.out.println(myAgent.getLocalName()+" a effectué une demande pour savoir si le ballon etait disponible");
-
-                        if (!handler.getTerrain().isBallonDisponible()) {
-                            //System.out.println("pas dispo pour "+getLocalName());
-
-                            //Tenter un tacle
-                            addBehaviour(new Behaviour() {
-                                public void action() {
-                                    /*boolean trouve = false;
-                                    int j = 0;
-                                    while (!trouve && j < handler.getTerrain().getJoueurs().size()) {
-                                        if (handler.getTerrain().getJoueurs().get(j).getAID() == handler.getTerrain().getJoueurAuBallon()) {
-                                            trouve = true;
-                                        } else {
-                                            j++;
-                                        }
-                                    }*/
-                                    AgentJoueur joueurAuBallon = handler.getJoueur(handler.getTerrain().getJoueurAuBallon());
-                                    if (joueurAuBallon != null) {
-                                        if (tacles > joueurAuBallon.getDribles()) {
-                                            handler.getTerrain().setPossession(numeroEquipe);
-                                            possessionJoueur = true;
-                                            handler.getTerrain().setBallonPos(pos);
-                                            joueurAuBallon.setPossessionJoueur(false);
-                                            System.out.println(getLocalName() + " a reussi un tacle");
-
-                                        } else {
-                                            count += 1;
-                                            System.out.println(joueurAuBallon.getLocalName() + " a reussi un dribble");
-                                        }
-                                    } else System.out.println("Cible du tacle non trouvée");
-                                }
-
-                                public boolean done() {
-                                    return true;
-                                }
-                            });
-                        } else {//prendre le ballon
-                            handler.getTerrain().setBallonDisponible(false);
-                            handler.getTerrain().setJoueurAuBallon(myAgent.getAID());
-                            handler.getTerrain().setPosJoueurAuBallon(pos);
-                            possessionJoueur = true;
-                            //vue.setPossession(true);
-                            handler.getTerrain().setBallonPos(new Position(pos));
-                            // possessionEquipe
-                            possessionEquipe = true;
-                            handler.getTerrain().setPossession(numero);
-                            if (numeroEquipe == 1) {
-                                pos.approcher(ReglesDuJeu.BUT_EQUIPE_1);
-                            } else pos.approcher(ReglesDuJeu.BUT_EQUIPE_2);
-                            System.out.println(myAgent.getLocalName() + " a r�cup�r� le ballon");
-                        }
+                        //TODO récupérer la réponse
+                        if (!handler.getTerrain().isBallonDisponible())
+                            tenterTacle();
+                        else
+                            prendreLeBallon(myAgent);
+                    } else {
+                        avancerVersBallon();
                     }
-
-                    // Je me rapproche du ballon
-                    pos.approcher(handler.getTerrain().getBallonPos());
                 } else if (!gardien) { // Si mon equipe a le ballon
-                    System.out.println(getLocalName() + ": mon equipe a le ballon");
+                    //System.out.println(getLocalName() + ": mon equipe a le ballon");
                     if (!possessionJoueur) {// Si ce n'est pas moi qui ait le ballon, mais un coequipier
-                        if (numeroEquipe == 1) {
-                            pos.Fuir(ReglesDuJeu.BUT_EQUIPE_1);
-                        } else pos.Fuir(ReglesDuJeu.BUT_EQUIPE_2);
+                        seDemarquer();
                     } else { // Si j'ai le ballon
-                        System.out.println(getLocalName() + " a le ballon");
-                        if (numeroEquipe == 1) {
-                            if (ReglesDuJeu.SEUIL_PROXIMITE * 3 < PositionHelper.distance(pos,ReglesDuJeu.BUT_EQUIPE_2)) {//si je suis loin du but adverse
-                                pos.approcher(ReglesDuJeu.BUT_EQUIPE_2);
-                                //vue.getVueTerrain().setBallonPos(new fr.alefebvre.school.footsma.modele.Position(pos));
-                                System.out.println(getLocalName() + " va au but");
-                            } else {
-                                //tenter un tir
-                                System.out.println(getLocalName() + " tente une frappe");
-                            }
-                        } else {
-                            if (ReglesDuJeu.SEUIL_PROXIMITE * 3 < PositionHelper.distance(pos,ReglesDuJeu.BUT_EQUIPE_1)) {//si je suis loin du but adverse
-                                pos.approcher(ReglesDuJeu.BUT_EQUIPE_1);
-                                //vue.getVueTerrain().setBallonPos(new fr.alefebvre.school.footsma.modele.Position(pos));
-                                System.out.println(getLocalName() + " va au but");
-                            } else {
-                                //tenter un tir
-                                System.out.println(getLocalName() + " tente une frappe");
-                            }
-                        }
+                        //System.out.println(getLocalName() + " a le ballon");
+                        Position butAdverse;
+                        if (numeroEquipe == 1)
+                            butAdverse = ReglesDuJeu.BUT_EQUIPE_2;
+                        else
+                            butAdverse = ReglesDuJeu.BUT_EQUIPE_1;
 
+                        if (ReglesDuJeu.SEUIL_PROXIMITE * 3 < PositionHelper.distance(pos, butAdverse)) {//si je suis loin du but adverse
+                            allerAuBut(butAdverse);
+                        } else {
+                            tenterFrappe();
+                        }
                     }
                 }
-
-                //pos.setX(pos.getX()+5);
-                //vue.setPos(pos);
-                //vue.getVueTerrain().repaint();
-                //Si je suis a proximite du ballon
-                //myAgent.doDelete();
             }
-        });
-        comportementparallele.addSubBehaviour(new CyclicBehaviour(this) {
 
-            public void action() {
-                ACLMessage msg = myAgent.receive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("temps")));
-                if (msg != null) {
-                    // Process the message
-                    if (Objects.equals(msg.getContent(), "STOP")) matchTermine = true;
-                    System.out.println(myAgent.getLocalName() + " a entendu le coup de sifflet final");
-                    myAgent.doDelete();
-                }
-            }
+
         });
+        comportementparallele.addSubBehaviour(new
+
+                                                      CyclicBehaviour(this) {
+
+                                                          public void action() {
+                                                              ACLMessage msg = myAgent.receive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("temps")));
+                                                              if (msg != null) {
+                                                                  // Process the message
+                                                                  if (Objects.equals(msg.getContent(), "STOP"))
+                                                                      matchTermine = true;
+                                                                  System.out.println(myAgent.getLocalName() + " a entendu le coup de sifflet final");
+                                                                  myAgent.doDelete();
+                                                              }
+                                                          }
+                                                      });
 
         addBehaviour(comportementparallele);
 
@@ -249,10 +178,67 @@ public class AgentJoueur extends GameObject {
         //doDelete();
     }
 
+    private void tenterFrappe() {
+        System.out.println(getLocalName() + " tente une frappe");
+    }
+
+    private void allerAuBut(Position butAdverse) {
+        pos.approcher(butAdverse);
+        System.out.println(getLocalName() + " va au but");
+    }
+
+    private void seDemarquer() {
+        if (numeroEquipe == 1) {
+            pos.Fuir(ReglesDuJeu.BUT_EQUIPE_1);
+        } else pos.Fuir(ReglesDuJeu.BUT_EQUIPE_2);
+    }
+
+    private void avancerVersBallon() {
+        pos.approcher(handler.getTerrain().getBallonPos());
+    }
+
+    private void prendreLeBallon(Agent myAgent) {
+        handler.getTerrain().setBallonDisponible(false);
+        handler.getTerrain().setJoueurAuBallon(myAgent.getAID());
+        handler.getTerrain().setPosJoueurAuBallon(pos);
+        possessionJoueur = true;
+        handler.getTerrain().setBallonPos(pos);
+        possessionEquipe = true;
+        handler.getTerrain().setPossession(numeroEquipe);
+        if (numeroEquipe == 1) {
+            pos.approcher(ReglesDuJeu.BUT_EQUIPE_1);
+        } else pos.approcher(ReglesDuJeu.BUT_EQUIPE_2);
+        System.out.println(myAgent.getLocalName() + " a récupéré le ballon");
+    }
+
+    private void tenterTacle() {
+        System.out.println(getLocalName() + " va tenter un tacle");
+        addBehaviour(new Behaviour() {
+            public void action() {
+                AgentJoueur joueurAuBallon = handler.getJoueur(handler.getTerrain().getJoueurAuBallon());
+                if (joueurAuBallon != null) {
+                    if (tacles > joueurAuBallon.getDribles()) {
+                        handler.getTerrain().setPossession(numeroEquipe);
+                        possessionJoueur = true;
+                        handler.getTerrain().setBallonPos(pos);
+                        joueurAuBallon.setPossessionJoueur(false);
+                        System.out.println(getLocalName() + " a reussi un tacle");
+
+                    } else {
+                        count += 1;
+                        System.out.println(joueurAuBallon.getLocalName() + " a reussi un dribble");
+                    }
+                } else System.out.println("Cible du tacle non trouvée");
+            }
+
+            public boolean done() {
+                return true;
+            }
+        });
+    }
+
     public void doDelete() {
         super.doDelete();
-        //vue.setPos(null);
-        //vue.getVueTerrain().repaint();
     }
 
     protected void takeDown() {
