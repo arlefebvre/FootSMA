@@ -32,7 +32,6 @@ import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
 import java.awt.*;
@@ -87,7 +86,7 @@ public class Simulation extends Canvas implements Runnable {
         }
     }
 
-    public static Object[] getArgsJoueur(AgentController terrain, AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
+    public static Object[] getArgsJoueur(AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
         Object[] argsJoueur = new Object[6];
         argsJoueur[0] = agentHandler;
         // couleur
@@ -126,12 +125,12 @@ public class Simulation extends Canvas implements Runnable {
         terrain.start();
 
         // Gardiens
-        Object[] argsJoueur1 = getArgsJoueur(terrain, agentHandler, true, 1, 1);
-        Object[] argsJoueur2 = getArgsJoueur(terrain, agentHandler, true, 2, 1);
+        Object[] argsJoueur1 = getArgsJoueur(agentHandler, true, 1, 1);
+        Object[] argsJoueur2 = getArgsJoueur(agentHandler, true, 2, 1);
 
         // Creation des joueurs
-        Object[] argsJoueur3 = getArgsJoueur(terrain, agentHandler, false, 1, 9);
-        Object[] argsJoueur4 = getArgsJoueur(terrain, agentHandler, false, 2, 10);
+        Object[] argsJoueur3 = getArgsJoueur(agentHandler, false, 1, 9);
+        Object[] argsJoueur4 = getArgsJoueur(agentHandler, false, 2, 10);
 
         AgentController joueur1 = agentContainer.createNewAgent("joueur1", AgentJoueur.class.getName(),
                 argsJoueur1);
@@ -153,9 +152,6 @@ public class Simulation extends Canvas implements Runnable {
         argsArbitre[1] = agentHandler;
         AgentController arbitre = agentContainer.createNewAgent("Arbitre", AgentArbitre.class.getName(), argsArbitre);
         arbitre.start();
-
-        //agentHandler.addMap(new TilesMap(0, 0, Constants.TEST_MAP_PATH));
-        // agentHandler.getObjects().add(new Player(0, 0, 0, 0, agentHandler));
     }
 
     public synchronized void start() {
