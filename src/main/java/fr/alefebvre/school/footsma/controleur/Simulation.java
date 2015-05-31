@@ -36,6 +36,7 @@ import jade.wrapper.StaleProxyException;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 public class Simulation extends Canvas implements Runnable {
 
@@ -86,6 +87,12 @@ public class Simulation extends Canvas implements Runnable {
         }
     }
 
+    public static Object[] getArgsJoueur(AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur, Position pos) {
+        Object[] argsJoueur = getArgsJoueur(agentHandler, estGardien, numEquipe, numJoueur);
+        argsJoueur[2] = pos;
+        return argsJoueur;
+    }
+
     public static Object[] getArgsJoueur(AgentHandler agentHandler, boolean estGardien, int numEquipe, int numJoueur) {
         Object[] argsJoueur = new Object[6];
         argsJoueur[0] = agentHandler;
@@ -131,20 +138,46 @@ public class Simulation extends Canvas implements Runnable {
         Object[] argsJoueur3 = getArgsJoueur(agentHandler, false, 1, 9);
         Object[] argsJoueur4 = getArgsJoueur(agentHandler, false, 2, 10);
 
-        AgentController joueur1 = agentContainer.createNewAgent("Lloris", AgentJoueur.class.getName(),
-                argsJoueur1);
-        AgentController joueur2 = agentContainer.createNewAgent("Mandanda",
-                AgentJoueur.class.getName(), argsJoueur2);
-        AgentController joueur3 = agentContainer.createNewAgent("Benzema", AgentJoueur.class.getName(),
-                argsJoueur3);
-        AgentController joueur4 = agentContainer.createNewAgent("Gignac",
-                AgentJoueur.class.getName(), argsJoueur4);
+
+        ArrayList<AgentController> joueurs = new ArrayList<>();
+        joueurs.add(agentContainer.createNewAgent("Lloris",
+                AgentJoueur.class.getName(), argsJoueur1));
+        joueurs.add(agentContainer.createNewAgent("Mandanda",
+                AgentJoueur.class.getName(), argsJoueur2));
+        joueurs.add(agentContainer.createNewAgent("Benzema",
+                AgentJoueur.class.getName(), argsJoueur3));
+        joueurs.add(agentContainer.createNewAgent("Gignac",
+                AgentJoueur.class.getName(), argsJoueur4));
+
+        if (ReglesDuJeu.NBJOUEURS >= 5) {
+            Object[] argsJoueur5 = getArgsJoueur(
+                    agentHandler, false, 1, 2,
+                    new Position(ReglesDuJeu.MILIEU_DE_TERRAIN.getX() / 2, ReglesDuJeu.MILIEU_DE_TERRAIN.getY() / 2));
+            joueurs.add(agentContainer.createNewAgent("Varane",
+                    AgentJoueur.class.getName(), argsJoueur5));
+            if (ReglesDuJeu.NBJOUEURS >= 6) {
+                Object[] argsJoueur6 = getArgsJoueur(
+                        agentHandler, false, 1, 3,
+                        new Position(ReglesDuJeu.MILIEU_DE_TERRAIN.getX() / 2, ReglesDuJeu.MILIEU_DE_TERRAIN.getY() * 3 / 2));
+                joueurs.add(agentContainer.createNewAgent("Pogba",
+                        AgentJoueur.class.getName(), argsJoueur6));
+                if (ReglesDuJeu.NBJOUEURS >= 7) {
+                    Object[] argsJoueur7 = getArgsJoueur(agentHandler, false, 2, 2,
+                            new Position(ReglesDuJeu.MILIEU_DE_TERRAIN.getX() * 3 / 2, ReglesDuJeu.MILIEU_DE_TERRAIN.getY() / 2 - 50));
+                    joueurs.add(agentContainer.createNewAgent("Sakho",
+                            AgentJoueur.class.getName(), argsJoueur7));
+                    if (ReglesDuJeu.NBJOUEURS >= 8) {
+                        Object[] argsJoueur8 = getArgsJoueur(agentHandler, false, 2, 3,
+                                new Position(ReglesDuJeu.MILIEU_DE_TERRAIN.getX() * 3 / 2, ReglesDuJeu.MILIEU_DE_TERRAIN.getY() / 2 + 50));
+                        joueurs.add(agentContainer.createNewAgent("Matuidi",
+                                AgentJoueur.class.getName(), argsJoueur8));
+                    }
+                }
+            }
+        }
 
 
-        joueur1.start();
-        joueur2.start();
-        joueur3.start();
-        joueur4.start();
+        for (AgentController j : joueurs) j.start();
 
         Object[] argsArbitre = new Object[2];
         argsArbitre[0] = 0;
