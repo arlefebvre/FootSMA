@@ -123,20 +123,37 @@ public class AgentTerrain extends GameObject {
 
     @Override
     public void render(Graphics g) {
+        //Terrain
         try {
             BufferedImage imgTerrain = ImageIO.read(new File("src/main/resources/images/terrain.jpg"));
-            g.drawImage(imgTerrain, 0, 0, null);
+            g.drawImage(imgTerrain, 1, 1, ReglesDuJeu.LONGUEUR_TERRAIN, ReglesDuJeu.LARGEUR_TERRAIN, null);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Pb de chargement d'image");
         }
+
+        //Ballon
         g.setColor(Color.WHITE);
-        g.fillOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
+        g.fillOval(ballonPos.getX() - ReglesDuJeu.TAILLE_BALLON / 2, ballonPos.getY() - ReglesDuJeu.TAILLE_BALLON / 2, ReglesDuJeu.TAILLE_BALLON, ReglesDuJeu.TAILLE_BALLON);
+        g.setColor(Color.BLACK);
+        g.drawOval(ballonPos.getX() - ReglesDuJeu.TAILLE_BALLON / 2, ballonPos.getY() - ReglesDuJeu.TAILLE_BALLON / 2, ReglesDuJeu.TAILLE_BALLON, ReglesDuJeu.TAILLE_BALLON);
+
+        //Arbitre
         g.setColor(ReglesDuJeu.COULEUR_ARBITRE);
-        g.drawOval(ballonPos.getX(), ballonPos.getY(), 12, 12);
-        g.fillOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
+        g.fillOval(ballonPos.getX(), ballonPos.getY() - 40, ReglesDuJeu.TAILLE_ARBITRE, ReglesDuJeu.TAILLE_ARBITRE);
         g.setColor(Color.WHITE);
-        g.drawOval(ballonPos.getX(), ballonPos.getY() - 40, 20, 20);
+        g.drawOval(ballonPos.getX(), ballonPos.getY() - 40, ReglesDuJeu.TAILLE_ARBITRE, ReglesDuJeu.TAILLE_ARBITRE);
+
+        //Milieu de terrain + lignes pour debug
+        if (Constants.DEBUG) {
+            int taille = 10;
+            int x = ReglesDuJeu.MILIEU_DE_TERRAIN.getX();
+            int y = ReglesDuJeu.MILIEU_DE_TERRAIN.getY();
+            g.setColor(Color.RED);
+            g.fillOval(x - taille / 2, y - taille / 2, taille, taille);
+            g.drawLine(0, y, ReglesDuJeu.LONGUEUR_TERRAIN, y);
+            g.drawLine(x, 0, x, ReglesDuJeu.LARGEUR_TERRAIN);
+        }
     }
 
     public boolean isPossessionEquipe1() {

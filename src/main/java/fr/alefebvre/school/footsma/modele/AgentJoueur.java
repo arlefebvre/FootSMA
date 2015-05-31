@@ -262,14 +262,14 @@ public class AgentJoueur extends GameObject {
     @Override
     public void render(Graphics g) {
         g.setColor(couleurMaillot);
-        g.fillOval(pos.getX(), pos.getY(), 20, 20);
+        g.fillOval(pos.getX() - ReglesDuJeu.TAILLE_JOUEUR / 2, pos.getY() - ReglesDuJeu.TAILLE_JOUEUR / 2, ReglesDuJeu.TAILLE_JOUEUR, ReglesDuJeu.TAILLE_JOUEUR);
         g.setColor(Color.WHITE);
         if (numero < 10) {
-            g.drawString(String.valueOf(numero), pos.getX() + 7, pos.getY() + 15);
+            g.drawString(String.valueOf(numero), pos.getX() - 3, pos.getY() + 3);
         } else {
-            g.drawString(String.valueOf(numero), pos.getX() + 3, pos.getY() + 15);
+            g.drawString(String.valueOf(numero), pos.getX() - 6, pos.getY() + 4);
         }
-        g.drawOval(pos.getX(), pos.getY(), 20, 20);
+        g.drawOval(pos.getX() - ReglesDuJeu.TAILLE_JOUEUR / 2, pos.getY() - ReglesDuJeu.TAILLE_JOUEUR / 2, ReglesDuJeu.TAILLE_JOUEUR, ReglesDuJeu.TAILLE_JOUEUR);
     }
 
     public int getDribles() {
