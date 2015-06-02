@@ -28,7 +28,6 @@ package fr.alefebvre.school.footsma.modele;
 import fr.alefebvre.school.footsma.controleur.AgentHandler;
 import fr.alefebvre.school.footsma.controleur.GameObject;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
@@ -67,21 +66,16 @@ public class AgentJoueur extends GameObject {
         try {
             handler = (AgentHandler) args[0];
             handler.getObjects().add(this);
-            //vue.setAgentJoueur(getAID());
             couleurMaillot = (Color) args[1];
-            //vue.setCouleurMaillot(couleurMaillot);
             pos = (Position) args[2];
-            //vue.setPos(pos);
             numero = (Integer) args[3];
             gardien = (Boolean) args[4];
-            //vue.setNumero(numero);
             numeroEquipe = (Integer) args[5];
-            handler.ajouteJoueur(this.getAID(), numeroEquipe);
-            //vue.setNumeroEquipe(numeroEquipe);
-            //vue.setVueTerrain((VueTerrain) args[6]);
-            //terrain = (AgentTerrain) args[6];
-            /*terrain = handler.getTerrain();
-            terrain.addJoueur(this);*/
+            if (gardien)
+                handler.ajouteGardien(this.getAID(), numeroEquipe);
+            else
+                handler.ajouteJoueur(this.getAID(), numeroEquipe);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,7 +127,7 @@ public class AgentJoueur extends GameObject {
                             if (!handler.getTerrain().isBallonDisponible())
                                 tenterTacle();
                             else
-                                prendreLeBallon(myAgent);
+                                prendreLeBallon();
                         } else {
                             avancerVersBallon();
                         }
@@ -187,7 +181,12 @@ public class AgentJoueur extends GameObject {
     }
 
     private void tenterFrappe() {
+
         System.out.println(getLocalName() + " tente une frappe");
+        AID gardienAID = handler.getGardienId(1 - numeroEquipe);
+        AgentGardien gardien = handler.getGardien(gardienAID);
+        if (gardien == null || gardien.getNoteArrets() < tirs)
+            System.out.println(" BUT de " + getLocalName() + " !!");
     }
 
     private void allerAuBut(Position butAdverse) {
@@ -205,9 +204,9 @@ public class AgentJoueur extends GameObject {
         pos.approcher(handler.getTerrain().getBallonPos());
     }
 
-    private void prendreLeBallon(Agent myAgent) {
+    private void prendreLeBallon() {
         handler.getTerrain().setBallonDisponible(false);
-        handler.getTerrain().setJoueurAuBallon(myAgent.getAID());
+        handler.getTerrain().setJoueurAuBallon(getAID());
         handler.getTerrain().setPosJoueurAuBallon(pos);
         possessionJoueur = true;
         handler.getTerrain().setBallonPos(pos);
@@ -216,7 +215,7 @@ public class AgentJoueur extends GameObject {
         if (numeroEquipe == 1) {
             pos.approcher(ReglesDuJeu.BUT_EQUIPE_1);
         } else pos.approcher(ReglesDuJeu.BUT_EQUIPE_2);
-        System.out.println(myAgent.getLocalName() + " a récupéré le ballon");
+        System.out.println(getLocalName() + " a récupéré le ballon");
     }
 
     private void tenterTacle() {

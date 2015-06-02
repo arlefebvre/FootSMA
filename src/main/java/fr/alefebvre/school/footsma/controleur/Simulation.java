@@ -141,9 +141,9 @@ public class Simulation extends Canvas implements Runnable {
 
         ArrayList<AgentController> joueurs = new ArrayList<>();
         joueurs.add(agentContainer.createNewAgent("Lloris",
-                AgentJoueur.class.getName(), argsJoueur1));
+                AgentGardien.class.getName(), argsJoueur1));
         joueurs.add(agentContainer.createNewAgent("Mandanda",
-                AgentJoueur.class.getName(), argsJoueur2));
+                AgentGardien.class.getName(), argsJoueur2));
         joueurs.add(agentContainer.createNewAgent("Benzema",
                 AgentJoueur.class.getName(), argsJoueur3));
         joueurs.add(agentContainer.createNewAgent("Gignac",

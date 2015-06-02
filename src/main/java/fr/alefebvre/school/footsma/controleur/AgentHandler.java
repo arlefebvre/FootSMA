@@ -26,6 +26,7 @@
 package fr.alefebvre.school.footsma.controleur;
 
 import fr.alefebvre.school.footsma.modele.AgentArbitre;
+import fr.alefebvre.school.footsma.modele.AgentGardien;
 import fr.alefebvre.school.footsma.modele.AgentJoueur;
 import fr.alefebvre.school.footsma.modele.AgentTerrain;
 import jade.core.AID;
@@ -49,6 +50,8 @@ public class AgentHandler {
 
     private AID terrainId;
     private AgentTerrain terrain;
+    private AID gardienEquipe1;
+    private AID gardienEquipe2;
 
     public CopyOnWriteArrayList<GameObject> getObjects() {
         return objects;
@@ -106,8 +109,41 @@ public class AgentHandler {
             equipe2.add(joueurAID);
     }
 
+    /**
+     * TODO A remplacer par des échanges de messages entre agents
+     *
+     * @param id
+     * @return
+     */
+    @Deprecated
     public AgentJoueur getJoueur(AID id) {
         Optional<GameObject> gameObject = objects.stream().filter(j -> j.getAID() == id).findFirst();
         return (AgentJoueur) gameObject.orElse(null);
+    }
+
+    public AID getGardienId(int numeroEquipeGardien) {
+        if (numeroEquipeGardien == 1)
+            return gardienEquipe1;
+        else
+            return gardienEquipe2;
+    }
+
+    public void ajouteGardien(AID aid, int numeroEquipe) {
+        if (numeroEquipe == 1)
+            this.gardienEquipe1 = aid;
+        else
+            this.gardienEquipe2 = aid;
+    }
+
+    /**
+     * TODO A remplacer par des échanges de messages entre agents
+     *
+     * @param id
+     * @return
+     */
+    @Deprecated
+    public AgentGardien getGardien(AID id) {
+        Optional<GameObject> gameObject = objects.stream().filter(g -> g.getAID() == id).findFirst();
+        return (AgentGardien) gameObject.orElse(null);
     }
 }
