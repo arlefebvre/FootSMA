@@ -33,8 +33,8 @@ import jade.lang.acl.ACLMessage;
 import java.awt.*;
 
 public class AgentArbitre extends GameObject {
-    private int scoreEquipe1;
-    private int scoreEquipe2;
+    private int scoreEquipe1 = 0;
+    private int scoreEquipe2 = 0;
     private int tempsDeJeu = 0;
     private Position pos;
     private AgentHandler handler;
@@ -56,11 +56,11 @@ public class AgentArbitre extends GameObject {
         handler.getObjects().add(this);
         handler.setArbitreId(this.getAID());
 
-        addBehaviour(new TickerBehaviour(this, 5000) {
+        addBehaviour(new TickerBehaviour(this, 1000) {
             protected void onTick() {
                 // perform operation Y
                 System.out.println(tempsDeJeu + " minutes jouées");
-                if (tempsDeJeu >= 90) {
+                if (tempsDeJeu >= 90 * 60) {
                     sifflerFinDuMatch();
                     myAgent.doDelete();
                 } else if (coupDEnvoiDonne)
@@ -84,6 +84,23 @@ public class AgentArbitre extends GameObject {
 
     @Override
     public void render(Graphics g) {
-        g.drawString(String.valueOf(tempsDeJeu), 0, 0);
+        int minutes = tempsDeJeu / 60;
+        int secondes = tempsDeJeu % 60;
+        StringBuilder sb = new StringBuilder();
+        sb.append("[Equipe1] ")
+                .append(scoreEquipe1)
+                .append("-")
+                .append(scoreEquipe2)
+                .append(" [Equipe2] | [");
+        if (minutes < 10)
+            sb.append("0");
+        sb.append(minutes);
+        sb.append(":");
+        if (secondes < 10)
+            sb.append("0");
+        sb.append(secondes);
+        sb.append("]");
+        g.setColor(Color.BLACK);
+        g.drawString(sb.toString(), 20, 20);
     }
 }
