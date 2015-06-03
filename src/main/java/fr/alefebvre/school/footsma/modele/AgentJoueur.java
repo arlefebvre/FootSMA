@@ -83,7 +83,7 @@ public class AgentJoueur extends GameObject {
         }
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
-        vitesse = rand.nextInt(400) + 100;
+        vitesse = rand.nextInt(400);
         tacles = rand.nextInt(100);
         dribles = (rand.nextInt(80) + 20);
         arrets = (rand.nextInt(100));
@@ -187,6 +187,13 @@ public class AgentJoueur extends GameObject {
         AgentGardien gardien = handler.getGardien(gardienAID);
         if (gardien == null || gardien.getNoteArrets() < tirs)
             System.out.println(" BUT de " + getLocalName() + " !!");
+        possessionEquipe = false;
+        possessionJoueur = false;
+        handler.getTerrain().rendreBallonDisponible();
+        handler.getTerrain().setBallonPos(ReglesDuJeu.MILIEU_DE_TERRAIN);
+        AID arbitreId = handler.getArbitreId();
+        AgentArbitre arbitre = handler.getArbitre(arbitreId);
+        arbitre.inscrireBut(numeroEquipe);
     }
 
     private void allerAuBut(Position butAdverse) {

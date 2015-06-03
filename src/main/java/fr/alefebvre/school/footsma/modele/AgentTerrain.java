@@ -67,6 +67,12 @@ public class AgentTerrain extends GameObject {
         this.ballonDisponible = ballonDisponible;
     }
 
+    public void rendreBallonDisponible() {
+        this.ballonDisponible = true;
+        this.possessionEquipe1 = false;
+        this.possessionEquipe2 = false;
+    }
+
     public AID getJoueurAuBallon() {
         return joueurAuBallon;
     }

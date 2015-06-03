@@ -103,4 +103,11 @@ public class AgentArbitre extends GameObject {
         g.setColor(Color.BLACK);
         g.drawString(sb.toString(), 20, 20);
     }
+
+    public void inscrireBut(int numeroEquipe) {
+        if(numeroEquipe == 1)
+            scoreEquipe1++;
+        else
+            scoreEquipe2++;
+    }
 }

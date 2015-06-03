@@ -45,13 +45,19 @@ public class AgentHandler {
     private Set<AID> equipe1 = new HashSet<>();
 
     private Set<AID> equipe2 = new HashSet<>();
-
     private AID arbitreId;
-
     private AID terrainId;
     private AgentTerrain terrain;
     private AID gardienEquipe1;
     private AID gardienEquipe2;
+
+    public AID getArbitreId() {
+        return arbitreId;
+    }
+
+    public void setArbitreId(AID arbitreId) {
+        this.arbitreId = arbitreId;
+    }
 
     public CopyOnWriteArrayList<GameObject> getObjects() {
         return objects;
@@ -74,10 +80,6 @@ public class AgentHandler {
                 arbitre.sifflerCoupDEnvoi();
             });
         }
-    }
-
-    public void setArbitreId(AID arbitreId) {
-        this.arbitreId = arbitreId;
     }
 
     public AID getTerrainId() {
@@ -145,5 +147,17 @@ public class AgentHandler {
     public AgentGardien getGardien(AID id) {
         Optional<GameObject> gameObject = objects.stream().filter(g -> g.getAID() == id).findFirst();
         return (AgentGardien) gameObject.orElse(null);
+    }
+
+    /**
+     * TODO A remplacer par des échanges de messages entre agents
+     *
+     * @param id
+     * @return
+     */
+    @Deprecated
+    public AgentArbitre getArbitre(AID id) {
+        Optional<GameObject> gameObject = objects.stream().filter(a -> a.getAID() == id).findFirst();
+        return (AgentArbitre) gameObject.orElse(null);
     }
 }
