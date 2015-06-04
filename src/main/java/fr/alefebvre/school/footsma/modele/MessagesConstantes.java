@@ -28,5 +28,6 @@ package fr.alefebvre.school.footsma.modele;
 public abstract class MessagesConstantes {
 
     public static final String ONTOLOGY_BALLON = "ballon";
-    public static final String QUERY_BALLON = "BALLONDISPO";
+    public static final String QUERY_BALLON = "Le ballon est-il disponible?";
+    public static final String BALLON_DISPO = "Le ballon est disponible";
 }

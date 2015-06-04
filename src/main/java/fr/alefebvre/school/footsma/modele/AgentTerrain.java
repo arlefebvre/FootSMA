@@ -100,7 +100,7 @@ public class AgentTerrain extends GameObject {
                     if (MessagesConstantes.QUERY_BALLON.equals(msg.getContent())) {
                         if (ballonDisponible) {
                             reply.setPerformative(ACLMessage.INFORM);
-                            reply.setContent("dispo");
+                            reply.setContent(MessagesConstantes.BALLON_DISPO);
                             ballonDisponible = false;
                             joueurAuBallon = msg.getSender();
                         } else {

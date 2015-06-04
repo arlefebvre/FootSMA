@@ -119,9 +119,8 @@ public class AgentJoueur extends GameObject {
                             //On demande d'abord au handler.getTerrain() si le ballon est disponible
                             ACLMessage demandeBallon = MessagesHelper.createBallonQuery(handler.getTerrainId());
                             send(demandeBallon);
-                            //System.out.println(myAgent.getLocalName()+" a effectué une demande pour savoir si le ballon etait disponible");
-                            //TODO récupérer la réponse
-                            if (!handler.getTerrain().isBallonDisponible())
+                            ACLMessage response = blockingReceive();
+                            if(MessagesConstantes.BALLON_DISPO.equals(response.getContent()))
                                 tenterTacle();
                             else
                                 prendreLeBallon();
