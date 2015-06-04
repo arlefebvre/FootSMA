@@ -49,7 +49,7 @@ public class AgentTerrain extends GameObject {
     private AID joueurAuBallon;
     private MessageTemplate template = MessageTemplate.and(
             MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF),
-            MessageTemplate.MatchOntology("ballon"));
+            MessageTemplate.MatchOntology(MessagesConstantes.ONTOLOGY_BALLON));
 
     public Position getBallonPos() {
         return ballonPos;
@@ -96,8 +96,8 @@ public class AgentTerrain extends GameObject {
                 if (msg != null) {
                     System.out.println("Received QUERY_IF message from agent " + msg.getSender().getName());
                     ACLMessage reply = msg.createReply();
-                    reply.setOntology("ballon");
-                    if ("BALLONDISPO".equals(msg.getContent())) {
+                    reply.setOntology(MessagesConstantes.ONTOLOGY_BALLON);
+                    if (MessagesConstantes.QUERY_BALLON.equals(msg.getContent())) {
                         if (ballonDisponible) {
                             reply.setPerformative(ACLMessage.INFORM);
                             reply.setContent("dispo");

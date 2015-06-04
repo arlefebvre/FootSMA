@@ -117,10 +117,7 @@ public class AgentJoueur extends GameObject {
 
                             //System.out.println(myAgent.getLocalName() + " est a proximité du ballon");
                             //On demande d'abord au handler.getTerrain() si le ballon est disponible
-                            ACLMessage demandeBallon = new ACLMessage(ACLMessage.QUERY_IF);
-                            demandeBallon.setOntology("ballon");
-                            demandeBallon.addReceiver(new AID("handler.getTerrain()", AID.ISLOCALNAME));
-                            demandeBallon.setContent("BALLONDISPO");
+                            ACLMessage demandeBallon = MessagesHelper.createBallonQuery(handler.getTerrainId());
                             send(demandeBallon);
                             //System.out.println(myAgent.getLocalName()+" a effectué une demande pour savoir si le ballon etait disponible");
                             //TODO récupérer la réponse
