@@ -41,11 +41,7 @@ public class AgentArbitre extends GameObject {
     private boolean coupDEnvoiDonne;
 
     public void sifflerCoupDEnvoi() {
-        ACLMessage msg;
-        msg = new ACLMessage(ACLMessage.REQUEST);
-        handler.getJoueursIds().forEach(msg::addReceiver);
-        msg.setContent("Jouez");
-        send(msg);
+        send(MessagesHelper.createDebutDuMatchRequest(handler.getJoueursIds()));
         coupDEnvoiDonne = true;
     }
 
@@ -70,12 +66,7 @@ public class AgentArbitre extends GameObject {
     }
 
     public void sifflerFinDuMatch() {
-        ACLMessage msg;
-        msg = new ACLMessage(ACLMessage.REQUEST);
-        msg.setOntology("temps");
-        handler.getJoueursIds().forEach(msg::addReceiver);
-        msg.setContent("STOP");
-        send(msg);
+        send(MessagesHelper.createFinDuMatchRequest(handler.getJoueursIds()));
     }
 
     protected void takeDown() {
