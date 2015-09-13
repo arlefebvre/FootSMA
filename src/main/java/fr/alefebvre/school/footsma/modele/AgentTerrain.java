@@ -84,7 +84,7 @@ public class AgentTerrain extends GameObject {
     protected void setup() {
         Object[] args = getArguments();
         handler = (AgentHandler) args[0];
-        handler.getObjects().add(this);
+        //handler.getObjects().add(this);
         handler.setTerrainId(this.getAID());
         handler.setTerrain(this);
 

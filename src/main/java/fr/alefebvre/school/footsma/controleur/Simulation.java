@@ -262,6 +262,9 @@ public class Simulation extends Canvas implements Runnable {
 
     public void endMatch() {
         //stop();
+        if (agentHandler != null)
+            agentHandler.stopMatch();
         System.exit(0);
+        stop();
     }
 }

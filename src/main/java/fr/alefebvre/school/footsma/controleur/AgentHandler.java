@@ -67,6 +67,8 @@ public class AgentHandler {
      * Rendu de tous les agents
      */
     public void render(Graphics g) {
+        if (terrain != null)
+            terrain.render(g);
         objects.forEach(agent -> agent.render(g));
     }
 
@@ -159,5 +161,11 @@ public class AgentHandler {
     public AgentArbitre getArbitre(AID id) {
         Optional<GameObject> gameObject = objects.stream().filter(a -> a.getAID() == id).findFirst();
         return (AgentArbitre) gameObject.orElse(null);
+    }
+
+    public void stopMatch() {
+        if (terrain != null)
+            terrain.doDelete();
+        objects.forEach(agent -> agent.doDelete());
     }
 }

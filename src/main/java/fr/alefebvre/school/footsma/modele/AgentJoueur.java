@@ -56,6 +56,7 @@ public class AgentJoueur extends GameObject {
     private int tirs;
     private boolean possession;
     private boolean pretAEffectuerUneAction = true;
+    private boolean matchCommence;
 
     public void setPretAEffectuerUneAction(boolean pretAEffectuerUneAction) {
         this.pretAEffectuerUneAction = pretAEffectuerUneAction;
@@ -88,23 +89,22 @@ public class AgentJoueur extends GameObject {
         dribles = (rand.nextInt(80) + 20);
         arrets = (rand.nextInt(100));
         tirs = (rand.nextInt(80) + 20);
-        //possession(possessionJoueur);
         System.out.println("Agent" + getLocalName() + " est créé");
-
-        System.out.println("Agent " + getLocalName() + ": en attente du coup d'envoi...");
-        ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
-        System.out.println("Agent " + getLocalName() + ": a entendu l'arbitre siffler le coup d'envoi");
-        ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
-        reply.addReceiver(msg.getSender());
-        reply.setContent("OK");
-        send(reply);
-        //doDelete();
 
         ParallelBehaviour comportementparallele = new ParallelBehaviour(ParallelBehaviour.WHEN_ANY);
         comportementparallele.addSubBehaviour(new TickerBehaviour(this, vitesse) {
             @Override
             protected void onTick() {
-                if (pretAEffectuerUneAction) {
+                if (!matchCommence) {
+                    System.out.println("Agent " + getLocalName() + ": en attente du coup d'envoi...");
+                    ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+                    matchCommence = true;
+                    System.out.println("Agent " + getLocalName() + ": a entendu l'arbitre siffler le coup d'envoi");
+                    ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+                    reply.addReceiver(msg.getSender());
+                    reply.setContent("OK");
+                    send(reply);
+                } else if (pretAEffectuerUneAction) {
                     if (numeroEquipe == 1) {
                         possessionEquipe = handler.getTerrain().isPossessionEquipe1();
 
@@ -120,7 +120,7 @@ public class AgentJoueur extends GameObject {
                             ACLMessage demandeBallon = MessagesHelper.createBallonQuery(handler.getTerrainId());
                             send(demandeBallon);
                             ACLMessage response = blockingReceive();
-                            if(MessagesConstantes.BALLON_DISPO.equals(response.getContent()))
+                            if (MessagesConstantes.BALLON_DISPO.equals(response.getContent()))
                                 tenterTacle();
                             else
                                 prendreLeBallon();
@@ -248,10 +248,6 @@ public class AgentJoueur extends GameObject {
                 return true;
             }
         });
-    }
-
-    public void doDelete() {
-        super.doDelete();
     }
 
     protected void takeDown() {
